@@ -1,7 +1,7 @@
 <template>
   <div class="login-container">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-      <h3 class="title">vue-admin-template</h3>
+      <h3 class="title">console</h3>
       <el-form-item prop="username">
         <span class="svg-container">
           <svg-icon icon-class="user" />
@@ -23,47 +23,43 @@
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
+      <el-form-item prop="valiCode">
+        <el-row>
+          <el-col :span="18">
+            <el-input v-model="loginForm.valiCode"/>
+          </el-col>
+          <el-col :span="6" style="text-align: right;">
+            <span class="image-container">
+              <img :src="verificationImg" @click="changeVerification">
+            </span>
+          </el-col>
+        </el-row>
+      </el-form-item>
       <el-form-item>
         <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
-          Sign in
+          登 录
         </el-button>
       </el-form-item>
-      <div class="tips">
-        <span style="margin-right:20px;">username: admin</span>
-        <span> password: admin</span>
-      </div>
     </el-form>
   </div>
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
-
+import md5 from 'blueimp-md5'
 export default {
   name: 'Login',
   data() {
-    const validateUsername = (rule, value, callback) => {
-      if (!isvalidUsername(value)) {
-        callback(new Error('请输入正确的用户名'))
-      } else {
-        callback()
-      }
-    }
-    const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于5位'))
-      } else {
-        callback()
-      }
-    }
     return {
+      verificationImg: '',
       loginForm: {
         username: 'admin',
-        password: 'admin'
+        password: 'admin',
+        valiCode: ''
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }]
+        username: [{ required: true, trigger: 'blur', message: '账号不能为空' }],
+        password: [{ required: true, trigger: 'blur', message: '密码不能为空' }],
+        valiCode: [{ required: true, trigger: 'blur', message: '验证码不能为空' }]
       },
       loading: false,
       pwdType: 'password',
@@ -78,6 +74,9 @@ export default {
       immediate: true
     }
   },
+  mounted() {
+    this.createCode()
+  },
   methods: {
     showPwd() {
       if (this.pwdType === 'password') {
@@ -86,18 +85,27 @@ export default {
         this.pwdType = 'password'
       }
     },
+    createCode() {
+      this.verificationImg = window.CONSOLE_CONFIG.url + '/dashbord/validate/image?t=' + Date.now()
+    },
+    changeVerification() {
+      this.createCode()
+    },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('Login', this.loginForm).then(() => {
+          const copyForm = Object.assign({}, this.loginForm)
+          copyForm.password = md5(md5(copyForm.password) + this.loginForm.username)
+          this.$store.dispatch('Login', copyForm).then(() => {
             this.loading = false
             this.$router.push({ path: this.redirect || '/' })
           }).catch(() => {
             this.loading = false
+            this.createCode()
           })
         } else {
-          console.log('error submit!!')
+          this.$message.error('请填入表单信息')
           return false
         }
       })
@@ -111,6 +119,14 @@ $bg:#2d3a4b;
 $light_gray:#eee;
 
 /* reset element-ui css */
+.image-container{
+  display: inline-block;
+  & > img{
+    position: absolute;
+    top:4px;
+    right:0;
+  }
+}
 .login-container {
   .el-input {
     display: inline-block;

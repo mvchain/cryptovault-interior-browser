@@ -26,13 +26,18 @@ const user = {
 
   actions: {
     // 登录
-    Login({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+    Login({ commit, state }, payload) {
       return new Promise((resolve, reject) => {
-        login(username, userInfo.password).then(response => {
-          const data = response.data
-          setToken(data.token)
-          commit('SET_TOKEN', data.token)
+        login(payload).then(res => {
+          const permission = {
+            adminType: res.adminType,
+            permissionList: res.permissionList
+          }
+          state.avatar = payload.username
+          window.localStorage.setItem('user', JSON.stringify({ refreshToken: res.refreshToken, username: payload.username }))
+          window.localStorage.setItem('permission', JSON.stringify(permission))
+          setToken(res.token)
+          commit('SET_TOKEN', res.token)
           resolve()
         }).catch(error => {
           reject(error)

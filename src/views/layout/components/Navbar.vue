@@ -4,7 +4,7 @@
     <breadcrumb />
     <el-dropdown class="avatar-container" trigger="click">
       <div class="avatar-wrapper">
-        <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+        <span>{{ avatar }}</span>
         <i class="el-icon-caret-bottom"/>
       </div>
       <el-dropdown-menu slot="dropdown" class="user-dropdown">
@@ -31,11 +31,30 @@ export default {
     Breadcrumb,
     Hamburger
   },
+  data() {
+    return {
+      avatar: '',
+      dialogFormVisible: false,
+      permission: '',
+      dialogBalance: false,
+      showAddressFlag: false,
+      addressObj: []
+    }
+  },
   computed: {
     ...mapGetters([
-      'sidebar',
-      'avatar'
+      'sidebar'
     ])
+  },
+  mounted() {
+    const un = window.localStorage.getItem('user')
+    const pe = window.localStorage.getItem('permission')
+    if (un) {
+      this.avatar = JSON.parse(un).username
+    }
+    if (pe) {
+      this.permission = JSON.parse(pe).adminType
+    }
   },
   methods: {
     toggleSideBar() {
@@ -76,7 +95,6 @@ export default {
       cursor: pointer;
       margin-top: 5px;
       position: relative;
-      line-height: initial;
       .user-avatar {
         width: 40px;
         height: 40px;
@@ -85,7 +103,7 @@ export default {
       .el-icon-caret-bottom {
         position: absolute;
         right: -20px;
-        top: 25px;
+        top: 19px;
         font-size: 12px;
       }
     }
