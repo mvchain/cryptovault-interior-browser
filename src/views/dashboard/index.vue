@@ -1,22 +1,13 @@
 <template>
   <div class="dashboard-container">
-    <!--<div class="dashboard-text">name:{{ name }}</div>-->
-    <!--<div class="dashboard-text">roles:<span v-for="role in roles" :key="role">{{ role }}</span></div>-->
-    <h1>欢迎登录管理系统</h1>
+    <div class="dashboard-text">欢迎登录钱包服务器</div>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 
 export default {
-  name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name',
-      'roles'
-    ])
-  }
+  name: 'dashboard'
 }
 </script>
 

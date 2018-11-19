@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+const _import = require('./_import_production')
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
@@ -8,13 +8,9 @@ Vue.use(Router)
 
 /* Layout */
 import Layout from '../views/layout/Layout'
-
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
-* alwaysShow: true               if set true, will always show the root menu, whatever its child routes length
-*                                if not set alwaysShow, only more than one route under the children
-*                                it will becomes nested mode, otherwise not show the root menu
-* redirect: noredirect           if `redirect:noredirect` will no redirect in the breadcrumb
+* redirect: noredirect           if `redirect:noredirect` will no redirct in the breadcrumb
 * name:'router-name'             the name is used by <keep-alive> (must set!!!)
 * meta : {
     title: 'title'               the name show in submenu and breadcrumb (recommend set)
@@ -22,8 +18,8 @@ import Layout from '../views/layout/Layout'
   }
 **/
 export const constantRouterMap = [
-  { path: '/login', component: () => import('@/views/login/index'), hidden: true },
-  { path: '/404', component: () => import('@/views/404'), hidden: true },
+  { path: '/login', component: _import('login/index'), hidden: true },
+  { path: '/404', component: _import('404'), hidden: true },
 
   {
     path: '/',
@@ -33,73 +29,116 @@ export const constantRouterMap = [
     hidden: true,
     children: [{
       path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
+      component: _import('dashboard/index')
     }]
   },
   {
-    path: '/adminManage',
+    path: '/AdministratorSettings',
     component: Layout,
+    redirect: '/AdministratorSettings/Setting',
+
+    name: 'AdministratorSettings',
+    meta: { title: '设置', icon: 'teacher', adminType: '0/1/2/3' },
     children: [
       {
-        path: 'admin',
-        name: 'Admin',
-        component: () => import('@/views/Admin/index'),
-        meta: { title: '管理员设置', icon: 'user' }
+        path: 'Setting',
+        name: 'Setting',
+        component: _import('AdministratorSettings/index'),
+        meta: { title: '管理员设置', icon: 'teacher', adminType: '0/1/2/3' }
       }
     ]
   },
   {
-    path: '/RWManage',
+    path: '/userManage',
     component: Layout,
-    redirect: '/RWManage/withdraw',
-    name: 'RWManage',
-    meta: { title: '充提管理', icon: 'nested' },
+    redirect: '/userManage/user',
+    name: 'userManage',
+    meta: { title: '用户', icon: 'teacher', adminType: '0/1' },
     children: [
       {
-        path: 'withdraw',
-        name: 'Withdraw',
-        component: () => import('@/views/Withdraw/index'),
-        meta: { title: '提币管理', icon: 'nested' }
-      },
+        path: 'user',
+        name: 'user',
+        component: _import('userManage/user'),
+        meta: { title: '用户管理', icon: 'teacher', adminType: '0/1' }
+      }
+    ]
+  },
+  {
+    path: '/rechargeWithdraw',
+    component: Layout,
+    redirect: '/rechargeWithdraw/recharge',
+    name: 'rechargeWithdraw',
+    meta: { title: '充提管理', icon: 'dragstore', adminType: '0/1/2/3' },
+    children: [
       {
         path: 'recharge',
-        name: 'Recharge',
-        component: () => import('@/views/Recharge/index'),
-        meta: { title: '充值管理', icon: 'nested' }
-      }
+        name: 'recharge',
+        component: _import('rechargeWithdraw/recharge'),
+        meta: { title: '充值记录', icon: 'dragstore', adminType: '0/1/2/3' }
+      },
+      {
+        path: 'withdraw',
+        name: 'withdraw',
+        component: _import('rechargeWithdraw/withdraw'),
+        meta: { title: '提币记录', icon: 'dragstore', adminType: '0/1/2/3' }
+      },
     ]
   },
   {
     path: '/crowdfunding',
     component: Layout,
     redirect: '/crowdfunding/project',
-    name: 'Crowdfunding',
-    meta: { title: '众筹管理', icon: 'table' },
+    name: 'crowdfunding',
+    meta: { title: '众筹管理', icon: 'wallet', adminType: '0/1' },
     children: [
       {
         path: 'project',
-        name: 'Project',
-        component: () => import('@/views/Project/index'),
-        meta: { title: '项目管理', icon: 'table' }
+        name: 'project',
+        component: _import('crowdfunding/project'),
+        meta: { title: '项目管理', icon: 'wallet', adminType: '0/1' }
       },
       {
         path: 'order',
-        name: 'Order',
-        component: () => import('@/views/Order/index'),
-        meta: { title: '订单管理', icon: 'table' }
+        name: 'order',
+        component: _import('crowdfunding/order'),
+        meta: { title: '订单提现', icon: 'wallet', adminType: '0/1' }
+      }
+    ]
+  },
+  {
+    path: '/tokenManage',
+    component: Layout,
+    redirect: '/tokenManage/token',
+    name: 'tokenManage',
+    meta: { title: '币种', icon: 'teacher', adminType: '0/1' },
+    children: [
+      {
+        path: 'token',
+        name: 'token',
+        component: _import('tokenManage/token'),
+        meta: { title: '币种管理', icon: 'teacher', adminType: '0/1' }
       }
     ]
   },
 
   {
-    path: '/tokenManage',
+    path: '/transaction',
     component: Layout,
+    redirect: '/transaction/rechargeData',
+    name: 'dataStatistics',
+    meta: { title: '交易管理', icon: 'list', adminType: '0/1/2/3' },
     children: [
       {
-        path: 'token',
-        name: 'Token',
-        component: () => import('@/views/Token/index'),
-        meta: { title: '币种管理', icon: 'tree' }
+        path: 'pending',
+        name: 'pending',
+        component: _import('transaction/pending'),
+        meta: { title: '挂单记录', icon: 'list', adminType: '0/1/2/3' }
+      },
+      {
+        path: 'carryOut',
+        name: 'carryOut',
+        component: _import('transaction/carryOut'),
+        meta: { title: '成交记录', icon: 'list', adminType: '0/1/2/3' }
       }
     ]
   },
@@ -109,5 +148,7 @@ export const constantRouterMap = [
 
 export default new Router({
   // mode: 'history', //后端支持可开
+  scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
 })
+

@@ -2,35 +2,35 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import store from '../store'
 import { getToken } from '@/utils/auth'
-axios.defaults.withCredentials = true
+
 // 创建axios实例
+axios.defaults.withCredentials = true
 const service = axios.create({
-  baseURL: window.CONSOLE_CONFIG.url, // api 的 base_url
-  timeout: 5000 // 请求超时时间
+  baseURL: window.urlData.url, // api的base_url
+  timeout: 15000 // 请求超时时间
+})
+// request拦截器
+service.interceptors.request.use(config => {
+  if (getToken()) {
+    config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
+  }
+  return config
+}, error => {
+  // Do something with request error
+  Promise.reject(error)
 })
 
-// request拦截器
-service.interceptors.request.use(
-  config => {
-    if (getToken()) {
-      config.headers['Authorization'] = getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
-    }
-    return config
-  },
-  error => {
-    // Do something with request error
-    console.log(error) // for debug
-    Promise.reject(error)
-  }
-)
-
-// response 拦截器
+// respone拦截器
 service.interceptors.response.use(
   response => {
     /**
      * code为非20000是抛错 可结合自己业务进行修改
      */
+
     const res = response.data
+    if ((response.request.responseURL.endsWith('/dashbord'))) {
+      return response.data.data
+    }
     if (res.code !== 200) {
       Message({
         message: res.data,

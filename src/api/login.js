@@ -7,18 +7,9 @@ export function login(data) {
     data
   })
 }
-
-export function getInfo(token) {
+export function refreshToken(data) {
   return request({
-    url: '/user/info',
-    method: 'get',
-    params: { token }
-  })
-}
-
-export function logout() {
-  return request({
-    url: '/user/logout',
+    url: '/dashbord/refresh',
     method: 'post'
   })
 }

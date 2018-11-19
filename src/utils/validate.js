@@ -30,3 +30,12 @@ export function validatAlphabets(str) {
   const reg = /^[A-Za-z]+$/
   return reg.test(str)
 }
+/* 正数 */
+export function balanceVerification(v) {
+  const reg = /^[0-9]+\.?[0-9]{0,9}$/
+  if (reg.test(v)) {
+    return true;
+  } else {
+    return false;
+  }
+}
