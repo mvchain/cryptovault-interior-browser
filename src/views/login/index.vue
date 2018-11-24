@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  import md5 from 'blueimp-md5'
+  // import md5 from 'blueimp-md5'
 
   export default {
     name: 'login',
@@ -61,9 +61,9 @@
       }
       return {
         loginForm: {
-          username: '',
-          password: '',
-          valiCode: ''
+          username: 'admin',
+          password: 'admin',
+          valiCode: '123'
         },
         verificationImg: '',
         loginRules: {
@@ -77,7 +77,7 @@
     },
     methods: {
       createCode() {
-        this.verificationImg = window.urlData.url + '/dashbord/validate/image?t=' + Date.now()
+        // this.verificationImg = window.urlData.url + '/dashbord/validate/image?t=' + Date.now()
       },
       showPwd() {
         if (this.pwdType === 'password') {
@@ -90,9 +90,7 @@
         this.$refs.loginForm.validate(valid => {
           if (valid) {
             this.loading = true
-            let copyForm =Object.assign({}, this.loginForm)
-            copyForm.password = md5(md5(copyForm.password) + this.loginForm.username)
-            this.$store.dispatch('Login', copyForm).then(() => {
+            this.$store.dispatch('Login', this.loginForm).then(() => {
               this.loading = false
               this.$router.push({ path: '/' })
             }).catch(() => {

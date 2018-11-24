@@ -1,5 +1,5 @@
 <template>
-    <div>成交记录</div>
+    <div class="carryOut">成交记录</div>
 </template>
 
 <script>
@@ -9,5 +9,8 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .carryOut{
+    padding:20px;
+  }
 </style>
 

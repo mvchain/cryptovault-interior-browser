@@ -1,7 +1,7 @@
 <template>
   <div class="admin">
-    <div v-if="permission === 0 || permission === 2">
-      <el-button type="success" @click="createManageFun">新建管理员</el-button>
+    <div >
+      <el-button type="success" @click="dialogFormVisible = true" v-if="adminType === '0'">新建管理员</el-button>
     </div>
     <div class="admin-table">
       <el-table
@@ -9,21 +9,28 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="adminType"
-          :formatter="adminTypeFormat"
           label="类型">
+          <template slot-scope="scope">
+            {{scope.row.adminType | adminTypeFilter}}
+          </template>
         </el-table-column>
-
         <el-table-column
-          prop="username"
+          prop="nickname"
           label="管理员名称">
+        </el-table-column>
+        <el-table-column
+          prop="status"
+          label="状态">
+          <template slot-scope="scope">
+            <span>{{scope.row.status ? '正常' : '禁用'}}</span>
+          </template>
         </el-table-column>
         <el-table-column
           with="600"
           label="操作">
           <template slot-scope="scope">
-            <el-button :disabled="permission === 1 || permission === 3" plain type="primary" @click="editManage(scope.row)" size="small">编辑</el-button>
-            <el-button v-if="scope.row.adminType !== 2 && scope.row.adminType !== 0" :disabled="permission === 1 || permission === 3" plain type="danger" size="small" @click="deleteManage(scope.row.id)">删除</el-button>
+            <el-button @click="editManage(scope.row)" size="small">编辑</el-button>
+            <el-button @click="deleteManage(scope.row.id)" size="small" v-if="adminType === '0' && manage.userId !== scope.row.id">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -38,26 +45,35 @@
     </div>
     <el-dialog width="500px" :title="dialogTitle?'新建管理员':'编辑管理员'" :visible.sync="dialogFormVisible" center>
       <el-form :rules="manageRule" :model="manageForm" ref="manageForm">
-        <el-form-item label="名称：" :label-width="formLabelWidth" prop="username">
-          <el-input v-model="manageForm.accountName"></el-input>
+        <el-form-item prop="nickname" label="管理员名称：" :label-width="formLabelWidth" >
+          <el-input v-model="manageForm.nickname"></el-input>
         </el-form-item>
-        <el-form-item label="账户：" :label-width="formLabelWidth" prop="accountName">
+        <el-form-item prop="username" label="登录账号：" :label-width="formLabelWidth" >
           <el-input v-model="manageForm.username"></el-input>
         </el-form-item>
-        <el-form-item label="密码：" :label-width="formLabelWidth" prop="password">
+        <el-form-item prop="password" v-if="dialogTitle" label="登录密码：" :label-width="formLabelWidth" >
           <el-input type="password" v-model="manageForm.password"></el-input>
         </el-form-item>
-        <el-form-item v-if="permission === 2" label="订单审核：" prop="delivery" :label-width="formLabelWidth">
-          <el-switch active-value="1" inactive-value="0" v-model="manageForm.permissionAuditing"></el-switch>
+        <el-form-item v-else="!dialogTitle" label="登录密码：" :label-width="formLabelWidth" >
+          <el-button size="small" @click="modifyFlag = true">修改</el-button>
         </el-form-item>
-        <el-form-item v-if="permission === 0" label="商家提现：" prop="delivery" :label-width="formLabelWidth">
-          <el-switch active-value="1" inactive-value="0" v-model="manageForm.permissionShopWithdraw"></el-switch>
+        <el-form-item class="admin-form-item"  label="充提控制："  :label-width="formLabelWidth">
+          <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[0].status"></el-switch>
         </el-form-item>
-        <el-form-item v-if="permission === 0" label="汇总操作：" prop="delivery" :label-width="formLabelWidth">
-          <el-switch active-value="1" inactive-value="0" v-model="manageForm.permissionCollect"></el-switch>
+        <el-form-item class="admin-form-item" label="用户控制："  :label-width="formLabelWidth">
+          <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[1].status"></el-switch>
         </el-form-item>
-        <el-form-item v-if="permission === 0" label="提币操作：" prop="delivery" :label-width="formLabelWidth">
-          <el-switch active-value="1" inactive-value="0" v-model="manageForm.permissionWithdraw"></el-switch>
+        <el-form-item class="admin-form-item" label="币种控制："  :label-width="formLabelWidth">
+          <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[2].status"></el-switch>
+        </el-form-item>
+        <el-form-item class="admin-form-item" label="众筹控制："  :label-width="formLabelWidth">
+          <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[3].status"></el-switch>
+        </el-form-item>
+        <el-form-item class="admin-form-item" label="交易控制："  :label-width="formLabelWidth">
+          <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[4].status"></el-switch>
+        </el-form-item>
+        <el-form-item class="admin-form-item" label="禁用："  :label-width="formLabelWidth">
+          <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.status"></el-switch>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -65,177 +81,172 @@
         <el-button :loading="subFlag" type="primary" @click="subForm('manageForm')">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog width="500px"  :visible.sync="modifyFlag" center>
+      <el-form :rules="pwdRule" :model="pwdForm" ref="pwdForm">
+        <el-form-item prop="newPassword" label="登录密码：" :label-width="formLabelWidth" >
+          <el-input type="password" v-model="pwdForm.newPassword"></el-input>
+        </el-form-item>
+        <el-form-item prop="password" label="管理员密码：" :label-width="formLabelWidth" >
+          <el-input type="password" v-model="pwdForm.password"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="modifyFlag = false">取 消</el-button>
+        <el-button :loading="subFlag" type="primary" @click="subPwdForm('pwdForm')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
   import {mapGetters} from 'vuex'
-  import md5 from 'blueimp-md5'
   export default {
     name: 'AdministratorSettings',
     props: {
-      permission: Number,
+      permission: String,
+      adminType: String,
       manage: Object
     },
     data() {
       return {
-        dialogTitle: true,
-        reviewSwitch: false,
         dialogFormVisible: false,
+        dialogTitle: true,
         subFlag: false,
-        formLabelWidth: '100px',
-        pageNum: 1,
+        pwdFlag: false,
+        modifyFlag: false,
+        formLabelWidth: '120px',
         manageForm: {
-          accountName: '',
-          adminPassword: '',
+          nickname: '',
           password: '',
-          permissionCollect: '0',
-          permissionWithdraw: '0',
-          permissionAuditing: '0',
-          permissionShopWithdraw: '0',
-          userId: '',
+          permissionList: [
+            {
+              permissionId: 1,
+              status: 0
+            },
+            {
+              permissionId: 2,
+              status: 0
+            },
+            {
+              permissionId: 3,
+              status: 0
+            },
+            {
+              permissionId: 4,
+              status: 0
+            },
+            {
+              permissionId: 5,
+              status: 0
+            }
+          ],
+          status: 0,
           username: ''
         },
         manageRule: {
-          accountName: [
-            { required: true, message: '请输入账户', trigger: 'blur' }
+          nickname: [
+            { required: true, message: '请输入管理员名称', trigger: 'blur' }
           ],
           password: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
+            { required: true, message: '请输入管理员密码', trigger: 'blur' }
           ],
           username: [
-            { required: true, message: '请输入用户名', trigger: 'blur' }
+            { required: true, message: '请输入管理员账号', trigger: 'blur' }
           ]
-        }
+        },
+        pwdForm: {
+          id: '',
+          password: '',
+          newPassword: ''
+        },
+        pwdRule: {
+          password: [
+            { required: true, message: '请输入新密码', trigger: 'blur' }
+          ],
+          newPassword: [
+            { required: true, message: '请输入当前管理员密码', trigger: 'blur' }
+          ]
+        },
+        pageNum: 1
       }
-    },
-    mounted() {
-      this.getTableData('pageNum=1&pageSize=20&orderBy=created_at')
     },
     computed: {
       ...mapGetters({
         adminList: 'adminList'
       })
     },
+    mounted() {
+      // ?createdStartAt=1&createdStopAt=2&orderBy=3&pageNum=3&pageSize=4&updatedStartAt=5&updatedStopAt=6
+      this.getTableData('?orderBy=created_at&pageNum=1&pageSize=20');
+    },
     methods: {
-      getTableData(payload) {
-        this.$store.dispatch('getAdminList', payload).then().catch()
-      },
-      handleCurrentChange(t) {
-        this.pageNum = t
-        this.getTableData(`pageNum=${t}&pageSize=20&orderBy=created_at`)
-      },
-      ajaxFormHandler(t, f, n) {
-        if (t) {
-          this.$store.dispatch('postCreateList', f).then(() => {
-            this.subFlag = false
-            this.$refs[n].resetFields()
-            this.getTableData('pageNum=1&pageSize=20&orderBy=created_at')
-            this.$message.success('创建成功')
-          }).catch(() => {
-            this.subFlag = false
-          })
-        } else {
-          this.$store.dispatch('putCreateList', f).then(() => {
-            this.subFlag = false
-            this.getTableData('pageNum=1&pageSize=20&orderBy=created_at')
-            this.$message.success('修改成功')
-          }).catch(() => {
-            this.subFlag = false
-          })
-        }
-      },
-      subForm(ruleForm) {
-        this.$prompt('请输入主管理员密码确认提交信息', {
-          confirmButtonText: '确定',
-          inputType: 'password',
-          cancelButtonText: '取消'
-        }).then(({ value }) => {
-          this.manageForm.adminPassword = value
-          if (!value) {
-            this.$message({
-              type: 'error',
-              message: '请输入管理员密码'
-            })
-            return
-          }
-          this.$refs[ruleForm].validate((valid) => {
-            if (valid) {
-              this.subFlag = true
-              const copyForm = {}
-              Object.assign(copyForm, this.manageForm)
-              copyForm.password = md5(md5(copyForm.password) + this.manageForm.username)
-              copyForm.adminPassword = md5(md5(copyForm.adminPassword) + this.manage.username)
-              copyForm.userId = copyForm.id
-              this.ajaxFormHandler(this.dialogTitle, copyForm, ruleForm)
-            } else {
-              this.subFlag = false
-              this.$message({
-                type: 'error',
-                message: '请输入正确信息'
-              })
-              return false
-            }
-          })
-        }).catch(() => {
-        })
-      },
-      createManageFun() {
-        this.dialogFormVisible = true
-        this.dialogTitle = true
-      },
-      deleteManage(id) {
-        this.$prompt('输入密码确认删除管理员', {
-          confirmButtonText: '确定',
-          inputType: 'password',
-          cancelButtonText: '取消'
-        }).then(({ value }) => {
-          const v = md5(md5(value) + this.manage.username)
-          this.$store.dispatch('deleteAdminList', { id: id, pwd: v }).then(() => {
-            this.$message.success('删除成功')
-            this.getTableData('pageNum=1&pageSize=20&orderBy=created_at')
-          }).catch()
-        }).catch(() => {
-        })
-      },
       editManage(obj) {
-        this.$store.dispatch('getManagePermission', obj.id).then((data) => {
-          const opt = {}
-          Object.assign(opt, obj)
-          this.dialogFormVisible = true
-          if (this.permission === 2) {
-            this.reviewSwitch = true
-          }
-          opt.password = ''
-          this.dialogTitle = false
-          this.permissionFormat(data.list, opt)
+        this.pwdForm.id = obj.id;
+        this.dialogFormVisible = true;
+        this.dialogTitle = false;
+        this.$store.dispatch('getAdminInfo', `/${obj.id}`).then((data) => {
+          this.manageForm = Object.assign({id: obj.id}, data)
         }).catch()
       },
-      adminTypeFormat(v, column) {
-        if (v.adminType === 0 || v.adminType === 2) {
-          return '主管理员'
-        } else if (v.adminType === 1 || v.adminType === 3) {
-          return '子管理员'
-        }
+      deleteManage(id) {
+        this.$confirm('确认删除管理员?', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          this.$store.dispatch('deleteDeleteAdmin', id).then(() => {
+            this.getTableData('?orderBy=created_at&pageNum=1&pageSize=20');
+          }).catch(() => { return false })
+        }).catch(() => { return false })
       },
-      permissionFormat(list, f) {
-        list.filter((item, idx, arr) => {
-          switch (item.permissionId) {
-            case 2:
-              f.permissionCollect = '1'
-              break
-            case 3:
-              f.permissionWithdraw = '1'
-              break
-            case 4:
-              f.permissionAuditing = '1'
-              break
-            case 5:
-              f.permissionShopWithdraw = '1'
-              break
+      handleCurrentChange(v) {
+        this.pageNum = v;
+        this.getTableData(`?orderBy=created_at&pageNum=${this.pageNum}&pageSize=20`);
+      },
+      subForm(form) {
+        this.subFlag = true;
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            this.$store.dispatch(this.dialogTitle ? 'postCreateAdmin' : 'putModifyAdmin', this.manageForm).then(() => {
+              this.subFlag = false;
+              this.dialogFormVisible = false;
+              this.$refs[form].resetFields();
+              this.$message.success('修改成功');
+              this.getTableData('?orderBy=created_at&pageNum=1&pageSize=20');
+            }).catch(() => {
+              this.subFlag = false
+            })
+          } else {
+            this.subFlag = false;
+            this.$message({
+              type: 'error',
+              message: '请输入正确信息'
+            });
+            return false
           }
         })
-        this.manageForm = f
+      },
+      subPwdForm(form) {
+        this.pwdFlag = true;
+        this.$refs[form].validate((valid) => {
+          if (valid) {
+            this.$store.dispatch('putModifyPwd', this.pwdForm).then(() => {
+              this.pwdFlag = false;
+              this.$refs[form].resetFields();
+            }).catch(() => {
+              this.subFlag = false
+            })
+          } else {
+            this.pwdFlag = false;
+            this.$message({
+              type: 'error',
+              message: '请输入正确信息'
+            });
+            return false
+          }
+        })
+      },
+      getTableData(condition) {
+        this.$store.dispatch('getAdminListAction', condition).then()
       }
     }
   }
@@ -246,6 +257,10 @@
     padding: 20px;
     .admin-table {
       margin-top: 20px;
+    }
+    .admin-form-item{
+      width:45%;
+      display: inline-block;
     }
   }
 </style>

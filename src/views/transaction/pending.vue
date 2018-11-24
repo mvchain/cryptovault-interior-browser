@@ -1,5 +1,5 @@
 <template>
-  <div>挂单记录</div>
+  <div class="pending">挂单记录</div>
 </template>
 
 <script>
@@ -9,4 +9,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .pending{
+    padding:20px;
+  }
 </style>

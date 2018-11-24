@@ -1,12 +1,24 @@
 export function adminTypeFilter(v) {
   switch (v) {
-    case v === 0 || v === 2:
+    case 0:
       return '主管理员'
-    case v === 1 || v === 3:
+    case 1:
       return '子管理员'
   }
 }
+export function projectStatusFliter(v) {
 
+  switch (v) {
+    case 0:
+      return '即将开始'
+    case 1:
+      return '进行中'
+    case 2:
+      return '已结束'
+    case 9:
+      return '取消'
+  }
+}
 export function statusFliter(v) {
   switch (v) {
     case 1:

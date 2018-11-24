@@ -36,15 +36,14 @@ export const constantRouterMap = [
     path: '/AdministratorSettings',
     component: Layout,
     redirect: '/AdministratorSettings/Setting',
-
     name: 'AdministratorSettings',
-    meta: { title: '设置', icon: 'teacher', adminType: '0/1/2/3' },
+    meta: { title: '设置', icon: 'teacher' },
     children: [
       {
         path: 'Setting',
         name: 'Setting',
         component: _import('AdministratorSettings/index'),
-        meta: { title: '管理员设置', icon: 'teacher', adminType: '0/1/2/3' }
+        meta: { title: '管理员设置', icon: 'teacher' }
       }
     ]
   },
@@ -53,34 +52,48 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/userManage/user',
     name: 'userManage',
-    meta: { title: '用户', icon: 'teacher', adminType: '0/1' },
+    meta: { title: '用户', icon: 'user' },
     children: [
       {
         path: 'user',
         name: 'user',
         component: _import('userManage/user'),
-        meta: { title: '用户管理', icon: 'teacher', adminType: '0/1' }
+        meta: { title: '用户管理', icon: 'user' }
+      },
+      {
+        path: 'assets',
+        name: 'assets',
+        hidden: true,
+        component: _import('userManage/assets'),
+        meta: { title: '资产列表', icon: 'user' }
+      },
+      {
+        path: 'operating',
+        name: 'operating',
+        hidden: true,
+        component: _import('userManage/operating'),
+        meta: { title: '操作记录', icon: 'teacher' }
       }
     ]
   },
   {
     path: '/rechargeWithdraw',
     component: Layout,
-    redirect: '/rechargeWithdraw/recharge',
+    redirect: '/rechargeWithdraw/withdraw',
     name: 'rechargeWithdraw',
-    meta: { title: '充提管理', icon: 'dragstore', adminType: '0/1/2/3' },
+    meta: { title: '充提管理', icon: 'dragstore' },
     children: [
-      {
-        path: 'recharge',
-        name: 'recharge',
-        component: _import('rechargeWithdraw/recharge'),
-        meta: { title: '充值记录', icon: 'dragstore', adminType: '0/1/2/3' }
-      },
       {
         path: 'withdraw',
         name: 'withdraw',
         component: _import('rechargeWithdraw/withdraw'),
-        meta: { title: '提币记录', icon: 'dragstore', adminType: '0/1/2/3' }
+        meta: { title: '提币记录', icon: 'dragstore' }
+      },
+      {
+        path: 'recharge',
+        name: 'recharge',
+        component: _import('rechargeWithdraw/recharge'),
+        meta: { title: '充值记录', icon: 'dragstore' }
       },
     ]
   },
@@ -89,19 +102,19 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/crowdfunding/project',
     name: 'crowdfunding',
-    meta: { title: '众筹管理', icon: 'wallet', adminType: '0/1' },
+    meta: { title: '众筹管理', icon: 'wallet'},
     children: [
       {
         path: 'project',
         name: 'project',
         component: _import('crowdfunding/project'),
-        meta: { title: '项目管理', icon: 'wallet', adminType: '0/1' }
+        meta: { title: '项目管理', icon: 'wallet' }
       },
       {
         path: 'order',
         name: 'order',
         component: _import('crowdfunding/order'),
-        meta: { title: '订单提现', icon: 'wallet', adminType: '0/1' }
+        meta: { title: '订单提现', icon: 'wallet' }
       }
     ]
   },
@@ -110,13 +123,13 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/tokenManage/token',
     name: 'tokenManage',
-    meta: { title: '币种', icon: 'teacher', adminType: '0/1' },
+    meta: { title: '币种', icon: 'record' },
     children: [
       {
         path: 'token',
         name: 'token',
         component: _import('tokenManage/token'),
-        meta: { title: '币种管理', icon: 'teacher', adminType: '0/1' }
+        meta: { title: '币种管理', icon: 'record' }
       }
     ]
   },
@@ -126,19 +139,19 @@ export const constantRouterMap = [
     component: Layout,
     redirect: '/transaction/rechargeData',
     name: 'dataStatistics',
-    meta: { title: '交易管理', icon: 'list', adminType: '0/1/2/3' },
+    meta: { title: '交易管理', icon: 'list' },
     children: [
       {
         path: 'pending',
         name: 'pending',
         component: _import('transaction/pending'),
-        meta: { title: '挂单记录', icon: 'list', adminType: '0/1/2/3' }
+        meta: { title: '挂单记录', icon: 'list' }
       },
       {
         path: 'carryOut',
         name: 'carryOut',
         component: _import('transaction/carryOut'),
-        meta: { title: '成交记录', icon: 'list', adminType: '0/1/2/3' }
+        meta: { title: '成交记录', icon: 'list' }
       }
     ]
   },

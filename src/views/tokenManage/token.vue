@@ -1,5 +1,5 @@
 <template>
-    <div>币种管理</div>
+    <div class="token">币种管理</div>
 </template>
 
 <script>
@@ -9,4 +9,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .token{
+    padding:20px;
+  }
 </style>
