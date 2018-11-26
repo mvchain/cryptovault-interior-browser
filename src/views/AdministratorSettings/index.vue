@@ -177,7 +177,7 @@
     },
     mounted() {
       // ?createdStartAt=1&createdStopAt=2&orderBy=3&pageNum=3&pageSize=4&updatedStartAt=5&updatedStopAt=6
-      this.getTableData('?orderBy=created_at&pageNum=1&pageSize=20');
+      this.getTableData('?pageNum=1&pageSize=20');
     },
     methods: {
       editManage(obj) {
@@ -200,7 +200,7 @@
       },
       handleCurrentChange(v) {
         this.pageNum = v;
-        this.getTableData(`?orderBy=created_at&pageNum=${this.pageNum}&pageSize=20`);
+        this.getTableData(`pageNum=${this.pageNum}&pageSize=20`);
       },
       subForm(form) {
         this.subFlag = true;
@@ -211,7 +211,7 @@
               this.dialogFormVisible = false;
               this.$refs[form].resetFields();
               this.$message.success('修改成功');
-              this.getTableData('?orderBy=created_at&pageNum=1&pageSize=20');
+              this.getTableData('pageNum=1&pageSize=20');
             }).catch(() => {
               this.subFlag = false
             })

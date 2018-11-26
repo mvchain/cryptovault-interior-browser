@@ -3,7 +3,7 @@ import { userList, userBalance, userLog } from '@/api/user'
 const user = {
   state: {
     userList: {},
-    userBalanceList: {},
+    userBalanceList: [],
     userLogList: {}
   },
 

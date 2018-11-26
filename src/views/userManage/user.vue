@@ -51,16 +51,15 @@
       })
     },
     mounted() {
-      // ?cellphone=1&createdStartAt=2&createdStopAt=3&orderBy=4&pageNum=5&pageSize=6&updatedStartAt=7&updatedStopAt=8
-      this.userListData('?orderBy=created_at&pageNum=1&pageSize=20')
+      this.userListData('?pageNum=1&pageSize=20')
     },
     methods: {
       handleCurrentChange(v) {
-        this.pageNum = v
-        this.userListData(`?orderBy=created_at&pageNum=${this.pageNum}&pageSize=20`)
+        this.pageNum = v;
+        this.userListData(`?pageNum=${this.pageNum}&pageSize=20`)
       },
       userListData(str) {
-        this.$store.dispatch('getUserList', str).then().catch()
+        this.$store.dispatch('getUserList', str);
       }
     }
   }

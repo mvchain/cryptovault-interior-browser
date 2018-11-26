@@ -31,14 +31,24 @@
         border
         style="width: 100%">
         <el-table-column
-          prop="createdAt"
           label="时间">
+          <template slot-scope="scope">
+            {{new Date(scope.row.createdAt).toLocaleString()}}
+          </template>
         </el-table-column>
         <el-table-column
           prop="message"
           label="描述">
         </el-table-column>
       </el-table>
+    </div>
+    <div style="margin-top:30px; text-align:center;">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :page-size="20"
+        layout="prev, pager, next"
+        :total="userLogList.total">
+      </el-pagination>
     </div>
   </div>
 </template>
@@ -51,6 +61,7 @@
     data() {
       return {
         rechargeTime: '',
+        pageNum: 1
       }
     },
     computed: {
@@ -59,14 +70,27 @@
       })
     },
     mounted() {
-      this.$store.dispatch('getUserLogList', this.$route.query.id)
+      this.userLogData('?orderBy=created_at desc&pageNum=1&pageSize=20')
     },
     methods: {
       exportTable() {
         console.log(this.rechargeTime)
       },
       timeChangeFun() {
-        console.log(this.rechargeTime)
+        let str = '';
+        if (this.rechargeTime) {
+          str = `?orderBy=created_at desc&pageNum=${this.pageNum}&pageSize=20&createdStartAt=${this.rechargeTime[0]}&createdStopAt=${this.rechargeTime[1]}`;
+        } else {
+          str = `?orderBy=created_at desc&pageNum=${this.pageNum}&pageSize=20`;
+        }
+        this.userLogData(str)
+      },
+      userLogData(str) {
+        this.$store.dispatch('getUserLogList', {id: this.$route.query.id, str})
+      },
+      handleCurrentChange(v) {
+        this.pageNum = v;
+        this.timeChangeFun()
       }
     }
   }

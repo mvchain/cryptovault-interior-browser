@@ -130,6 +130,7 @@
         companyStatus: '',
         rechargeTime: '',
         searchText: '',
+        pageNum: 1,
 
       }
     },
@@ -141,7 +142,7 @@
 
     mounted() {
       // ?createdStartAt=1&createdStopAt=2&orderBy=3&orderNumber=4&pageNum=5&pageSize=6&status=7&toAddress=8&updatedStartAt=9&updatedStopAt=10
-      this.withdrawData(`?orderBy=created_at&orderNumber=4&pageNum=5&pageSize=6&status=7&toAddress=8&updatedStartAt=9&updatedStopAt=10`)
+      this.withdrawData(`?orderBy=created_at&orderNumber=${this.searchText}&pageNum=${this.pageNum}&pageSize=20&status=7&toAddress=8&updatedStartAt=9&updatedStopAt=10`)
     },
     methods: {
       statusChange() {},

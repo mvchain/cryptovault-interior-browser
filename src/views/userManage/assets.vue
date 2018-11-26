@@ -6,7 +6,7 @@
     </div>
     <div style="margin-top:20px;">
       <el-table
-        :data="userBalanceList.list"
+        :data="userBalanceList"
         border
         style="width: 100%">
         <el-table-column

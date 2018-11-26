@@ -13,7 +13,7 @@ export function userBalance(data) {
 }
 export function userLog(data) {
   return request({
-    url: `/user/${data}/log`,
+    url: `/user/${data.id}/log${data.str}`,
     method: 'get'
   })
 }

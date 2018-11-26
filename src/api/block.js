@@ -17,10 +17,10 @@ export function blockFee(data) {
     method: 'get'
   })
 }
-export function postBlockFee(data) {
+export function putBlockFee(data) {
   return request({
     url: '/block/fee',
-    method: 'post',
+    method: 'put',
     data
   })
 }
@@ -30,10 +30,10 @@ export function blockHold(data) {
     method: 'get'
   })
 }
-export function postBlockHold(data) {
+export function putBlockHold(data) {
   return request({
     url: '/block/hold',
-    method: 'post',
+    method: 'put',
     data
   })
 }
