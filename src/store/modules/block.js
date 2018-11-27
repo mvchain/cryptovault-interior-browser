@@ -1,4 +1,4 @@
-import { blockTx, blockFee, blockHold, putBlockFee, putBlockHold } from '@/api/block';
+import { blockTx, blockFee, blockHold, putBlockFee, putBlockHold, blockStatus } from '@/api/block';
 const block = {
   state: {
     blockTxList: {}
@@ -51,6 +51,15 @@ const block = {
     putBlockHoldFun({commit, state}, payload) {
       return new Promise((resolve, reject) => {
         putBlockHold(payload).then((res) => {
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    putBlockStatus({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        blockStatus(payload).then((res) => {
           resolve(res)
         }).catch(error => {
           reject(error)

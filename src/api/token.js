@@ -44,9 +44,9 @@ export function tokenSetting(data) {
     method: 'get'
   })
 }
-export function modifyTokenSetting(id, data) {
+export function modifyTokenSetting(data) {
   return request({
-    url: '/token/setting' + id,
+    url: '/token/setting/' + data.id,
     method: 'put',
     data
   })

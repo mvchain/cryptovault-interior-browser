@@ -1,6 +1,5 @@
 <template>
   <div class="recharge">
-
     <el-row>
       <el-col :span="18">
         <el-date-picker
@@ -20,7 +19,7 @@
         <el-button @click="exportTable">导出表格</el-button>
       </el-col>
       <el-col :span="6">
-        <el-input placeholder="输入hash、来源地址" v-model="searchText" class="input-with-select">
+        <el-input clearable placeholder="输入hash、来源地址" v-model="searchText" class="input-with-select">
           <el-button @click="searchHandler" slot="append" icon="el-icon-search">搜索</el-button>
         </el-input>
       </el-col>
@@ -75,6 +74,9 @@
       return {
         rechargeTime: '',
         searchText: '',
+        pageNum: 1,
+        hash: '',
+        fromAddress: ''
       }
     },
     computed: {
@@ -82,15 +84,37 @@
         blockTxList: 'blockTxList'
       })
     },
+    mounted() {
+      this.withdrawData();
+    },
     methods: {
       exportTable() {
         console.log(this.rechargeTime)
       },
-      searchHandler() {},
-      timeChangeFun() {
-        console.log(this.rechargeTime)
+      searchHandler() {
+        this.searchText = this.searchText.replace(/\s/g, '');
+        if (this.searchText.length !== 42 && this.searchText.length !== 35) {
+          this.hash = this.searchText;
+          this.fromAddress = '';
+        } else if (this.searchText === '') {
+          this.hash = '';
+          this.fromAddress = '';
+        } else {
+          this.fromAddress = this.searchText;
+          this.hash = '';
+        }
+        this.withdrawData()
       },
-      handleCurrentChange() {}
+      timeChangeFun() {
+        this.withdrawData()
+      },
+      handleCurrentChange() {
+        this.pageNum = v;
+        this.withdrawData()
+      },
+      withdrawData() {
+        this.$store.dispatch('getBlockTxList', `?orderBy=created_at desc&hash=${this.hash}&pageNum=${this.pageNum}&pageSize=20&fromAddress=${this.fromAddress}&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&oprType=1`).then().catch()
+      }
     }
   }
 </script>

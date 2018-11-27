@@ -3,14 +3,13 @@
   <el-upload
     :action="imgBase"
     :data="imgObj"
-    :limit="1"
+    :show-file-list="false"
     :on-success="handleAvatarSuccess"
     :on-error="handleAvatarError"
     :before-upload="beforeAvatarUpload"
-    :file-list="fileList"
     list-type="picture">
-    <el-button size="small" type="primary" @click.native="updateImg">点击上传</el-button>
-    <div slot="tip" class="el-upload__tip">只能上传{{payload}}文件，且不超过{{limit}}M</div>
+    <img v-if="imageUrl" :src="imageUrl"  @click="updateImg" class="avatar">
+    <i v-else class="el-icon-plus avatar-uploader-icon"  @click="updateImg"></i>
   </el-upload>
 </template>
 <script type='text/ecmascript-6'>
@@ -21,13 +20,19 @@
       limit: Number,
       type: String,
       payload: String,
-      proObj: Object
+      proObj: Object,
+      imgName: String,
+    },
+    mounted() {
+      if (this.imgName) {
+        this.imageUrl = this.imgName
+      }
     },
     data() {
       return {
-        imgName: '',
-        fileList: [],
         imgBase: window.urlData.ossObj.host,
+        imageUrl: '',
+        ossObj: {},
         imgObj: {
           name: '',
           key: '',
@@ -38,25 +43,14 @@
         }
       }
     },
-    computed: {
-      ...mapGetters({
-        ossObj: 'ossObj'
-      })
-    },
-    destroyed() {
-      window.sessionStorage.removeItem('fileList')
-    },
-    created() {
-      if (this.$route.query.id) {
-        const item = JSON.parse(window.sessionStorage.getItem('fileList'))
-        this.fileList[0] = item[this.type]
-      }
-    },
+
+
     methods: {
       updateImg() {
         this.$store.dispatch('getOssObj').then((res) => {
-          this.imgObj.policy = this.ossObj.policy
-          this.imgObj.signature = this.ossObj.signature
+          this.ossObj = res;
+          this.imgObj.policy = res.policy;
+          this.imgObj.signature = res.signature
         }).catch((err) => {
           this.$message.error(err)
         })
@@ -104,20 +98,16 @@
         const now = new Date()
         const nowStr = this.dateFormat(now, 'yyyyMMddhhmmss')
         const suffix = this.get_suffix(filename)
-        return this.ossObj.dir + nowStr + this.random_string(10) + suffix
+        return this.ossObj.dir + '/' + nowStr + this.random_string(10) + suffix
       },
 
       handleAvatarSuccess(res, file) {
         this.imageUrl = this.imgBase + '/' + this.imgObj.key
-        this.$emit('set-img-url', { name: file.name, url: this.imageUrl, type: this.type })
+        this.$emit('set-img-url', this.imageUrl)
       },
       beforeAvatarUpload(file) {
         let isJPG = false
-        if (this.type === 'introduction' || this.type === 'leader' || this.type === 'cover') {
-          isJPG = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg'
-        } else if (this.type === 'white') {
-          isJPG = file.name.includes('pdf')
-        }
+        isJPG = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg'
         const isLt2M = file.size / 1024 / 1024 < this.limit
         this.imgObj.key = this.calculate_object_name(file.name)
         if (!isJPG) {
@@ -126,7 +116,6 @@
         if (!isLt2M) {
           this.$message.error(`上传文件大小不能超过 ${this.limit}MB!`)
         }
-        this.imgName = file.name
         return isJPG && isLt2M
       },
       handleAvatarError(err) {
@@ -136,4 +125,28 @@
   }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border: 1px dashed #d9d9d9;
+  }
+  .avatar {
+    width: 50px;
+    height: 50px;
+    display: block;
+  }
 </style>

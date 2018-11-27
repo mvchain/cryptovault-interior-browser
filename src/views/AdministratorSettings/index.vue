@@ -210,7 +210,7 @@
               this.subFlag = false;
               this.dialogFormVisible = false;
               this.$refs[form].resetFields();
-              this.$message.success('修改成功');
+              this.$message.success('提交成功');
               this.getTableData('pageNum=1&pageSize=20');
             }).catch(() => {
               this.subFlag = false

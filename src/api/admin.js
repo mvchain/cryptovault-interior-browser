@@ -34,3 +34,9 @@ export function adminPwd(opt) {
     data: opt
   })
 }
+export function ossObjHandler() {
+  return request({
+    url: '/admin/signature?dir=cryptovalut',
+    method: 'get'
+  })
+}
