@@ -25,7 +25,12 @@
     },
     mounted() {
       if (this.imgName) {
-        this.imageUrl = this.imgName
+        this.imageUrl = this.imgName;
+      }
+    },
+    watch: {
+      imgName: function(v) {
+        this.imageUrl = v;
       }
     },
     data() {

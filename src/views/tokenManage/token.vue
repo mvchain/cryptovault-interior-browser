@@ -72,7 +72,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <el-dialog width="500px"  :visible.sync="dialogFormVisible" center>
+    <el-dialog @closed="dialogClose" width="500px"  :visible.sync="dialogFormVisible" center>
       <el-form :rules="tokenRules" :model="tokenForm" ref="tokenForm">
         <el-form-item prop="tokenImage" label="币种图标" :label-width="formLabelWidth" >
           <pro-oss @set-img-url="getImg" :imgName="imgName" :payload="'image/jpeg/image/png/image/jpg'" :limit="1"></pro-oss>
@@ -334,7 +334,8 @@
             { required: true, message: '请输入下个基准价格', trigger: 'blur' }
           ]
         },
-        imgName: ''
+        imgName: '',
+        dialogCopy: {},
       }
     },
     computed: {
@@ -343,7 +344,8 @@
       })
     },
     mounted() {
-      this.tokenData()
+      this.tokenData();
+      this.dialogCopy = Object.assign({},this.tokenForm);
     },
     methods: {
       parameterHandler(v) {
@@ -442,7 +444,11 @@
           this.dialogFormVisible = true;
           this.tokenForm = Object.assign({}, res)
         }).catch()
-      }
+      },
+      dialogClose() {
+        this.tokenForm = Object.assign({},this.dialogCopy);
+        this.imgName = '';
+      },
     }
   }
 </script>

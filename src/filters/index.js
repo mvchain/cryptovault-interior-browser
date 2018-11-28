@@ -6,6 +6,19 @@ export function adminTypeFilter(v) {
       return '子管理员'
   }
 }
+export function orderStatusFliter(v) {
+
+  switch (v) {
+    case 0:
+      return '等待结算';
+    case 1:
+      return '成功众筹';
+    case 9:
+      return '未成功众筹';
+    default:
+      return '未成功众筹';
+  }
+}
 export function projectStatusFliter(v) {
 
   switch (v) {

@@ -25,12 +25,12 @@
           label="兑换比例">
         </el-table-column>
         <el-table-column
-          prop="startedAt"
           label="预约开始时间">
+          <template slot-scope="scope">{{new Date(scope.row.startedAt).toLocaleString()}}</template>
         </el-table-column>
         <el-table-column
-          prop="stopAt"
           label="结束时间">
+          <template slot-scope="scope">{{new Date(scope.row.stopAt).toLocaleString()}}</template>
         </el-table-column>
         <el-table-column
           label="状态">
@@ -41,16 +41,24 @@
         <el-table-column
           label="操作">
           <template slot-scope="scope">
-            <el-button @click="editProjectFun(scope.row)" size="small">编辑</el-button>
+            <el-button @click="editProjectFun(scope.row.id)" size="small">编辑</el-button>
             <el-button @click="deleteProjectFun(scope.row.id)" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
+      <div style="margin-top:30px; text-align:center;">
+        <el-pagination
+          @current-change="handleCurrentChange"
+          :page-size="20"
+          layout="prev, pager, next"
+          :total="projectList.total">
+        </el-pagination>
+      </div>
     </div>
-    <el-dialog width="500px" :title="createFlag?'新建项目':'编辑项目'" :visible.sync="dialogFlag" center>
+    <el-dialog @closed="dialogClose" width="600px" :title="createFlag?'新建项目':'编辑项目'" :visible.sync="dialogFlag" center>
       <el-form :rules="projectRule" :model="projectForm" ref="projectForm">
         <el-form-item prop="projectImage" label="项目图标" :label-width="formLabelWidth" >
-          <el-input v-model="projectForm.projectImage"></el-input>
+          <pro-oss @set-img-url="getImg" :imgName="imgName" :payload="'image/jpeg/image/png/image/jpg'" :limit="1"></pro-oss>
         </el-form-item>
         <el-form-item prop="projectName" label="项目名称" :label-width="formLabelWidth" >
           <el-input v-model="projectForm.projectName"></el-input>
@@ -58,7 +66,7 @@
         <el-form-item prop="tokenId" class="project-form-item"  label="对应币种"  :label-width="formLabelWidth">
           <el-select v-model="projectForm.tokenId" placeholder="请选择">
             <el-option
-              v-for="item in tokenList.list"
+              v-for="item in tokenList"
               :key="item.tokenId"
               :label="item.tokenName"
               :value="item.tokenId">
@@ -104,7 +112,9 @@
             placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
-
+        <el-form-item prop="releaseValue" class="project-form-item" label="每日释放比例"  :label-width="formLabelWidth">
+          <el-input v-model="projectForm.releaseValue"></el-input>
+        </el-form-item>
         <el-form-item class="project-form-item" label="前端展示"  :label-width="formLabelWidth">
           <el-switch v-model="projectForm.visiable" :active-value="1" :inactive-value="0" ></el-switch>
         </el-form-item>
@@ -119,7 +129,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
-
+  import oss from '../../components/ossload'
   export default {
     name: 'project',
     computed: {
@@ -128,9 +138,12 @@
         tokenList: 'tokenList'
       })
     },
+    components: {
+      'pro-oss': oss
+    },
     data() {
       return {
-        formLabelWidth: '100px',
+        formLabelWidth: '110px',
         projectForm: {
           baseTokenId: '',
           tokenId: '',
@@ -158,19 +171,22 @@
             { required: true, message: '请输入项目图标', trigger: 'blur' }
           ],
           projectMin: [
-            { required: true, message: '请输入项目最小购买数', trigger: 'blur' }
+            { required: true, message: '请输入最小购买数', trigger: 'blur' }
           ],
           projectLimit: [
-            { required: true, message: '请输入项目最大购买数', trigger: 'blur' }
+            { required: true, message: '请输入最大购买数', trigger: 'blur' }
           ],
           projectName: [
             { required: true, message: '请输入项目名称', trigger: 'blur' }
           ],
           projectTotal: [
-            { required: true, message: '请输入项目众筹总量', trigger: 'blur' }
+            { required: true, message: '请输入众筹总量', trigger: 'blur' }
           ],
           ratio: [
             { required: true, message: '请输入兑换比例', trigger: 'blur' }
+          ],
+          releaseValue: [
+            { required: true, message: '请输入释放比例', trigger: 'blur' }
           ]
         },
         dialogFlag: false,
@@ -186,16 +202,30 @@
             name: '余额交易'
           }
         ],
+        pageNum: 1,
+        imgName: '',
+        copyForm: {}
       }
     },
+    mounted() {
+      this.projectData()
+      this.copyForm = Object.assign({}, this.projectForm);
+      this.$store.dispatch('getTokenList', '?tokenName=');
+    },
     methods: {
+      getImg(v) {
+        this.projectForm.projectImage = v;
+      },
       subForm(form) {
         this.subFlag = true;
         this.$refs[form].validate((valid) => {
           if (valid) {
             this.$store.dispatch(this.createFlag ? 'postProjectList' : 'putProjectList', this.projectForm).then(() => {
               this.subFlag = false;
+              this.dialogFlag = false;
               this.$refs[form].resetFields();
+              this.projectData()
+              this.$message.success('提交成功');
             }).catch(() => {
               this.subFlag = false
             })
@@ -209,10 +239,13 @@
           }
         })
       },
-      editProjectFun(obj) {
-        this.dialogFlag = true;
-        this.createFlag = false;
-        this.projectForm = Object.assign({}, obj)
+      editProjectFun(id) {
+        this.$store.dispatch('getProjectInfo', `/${id}`).then((res) => {
+          this.dialogFlag = true;
+          this.createFlag = false;
+          this.projectForm = Object.assign({}, res);
+          this.imgName = res.projectImage;
+        }).catch()
       },
       deleteProjectFun(id) {
         this.$confirm('确认删除该项目?', {
@@ -220,7 +253,7 @@
           cancelButtonText: '取消'
         }).then(() => {
           this.$store.dispatch('deleteProjectList', `/${id}`).then(() => {
-
+            this.projectData()
           }).catch(() => { return false })
         }).catch(() => { return false })
       },
@@ -230,6 +263,17 @@
             this.projectForm.baseTokenName = obj.name
           }
         })
+      },
+      projectData() {
+        this.$store.dispatch('getProjectList', `?pageNum=${this.pageNum}&pageSize=20`)
+      },
+      handleCurrentChange(v) {
+        this.pageNum = v;
+        this.projectData()
+      },
+      dialogClose() {
+        this.projectForm = Object.assign({}, this.copyForm)
+        this.imgName = ''
       }
     }
   }

@@ -43,7 +43,7 @@
         </el-pagination>
       </div>
     </div>
-    <el-dialog width="500px" :title="dialogTitle?'新建管理员':'编辑管理员'" :visible.sync="dialogFormVisible" center>
+    <el-dialog @closed="dialogClose" width="500px" :title="dialogTitle?'新建管理员':'编辑管理员'" :visible.sync="dialogFormVisible" center>
       <el-form :rules="manageRule" :model="manageForm" ref="manageForm">
         <el-form-item prop="nickname" label="管理员名称：" :label-width="formLabelWidth" >
           <el-input v-model="manageForm.nickname"></el-input>
@@ -167,7 +167,8 @@
             { required: true, message: '请输入当前管理员密码', trigger: 'blur' }
           ]
         },
-        pageNum: 1
+        pageNum: 1,
+        copyForm: {}
       }
     },
     computed: {
@@ -178,6 +179,7 @@
     mounted() {
       // ?createdStartAt=1&createdStopAt=2&orderBy=3&pageNum=3&pageSize=4&updatedStartAt=5&updatedStopAt=6
       this.getTableData('?pageNum=1&pageSize=20');
+      this.copyForm = Object.assign({}, this.manageForm);
     },
     methods: {
       editManage(obj) {
@@ -247,6 +249,10 @@
       },
       getTableData(condition) {
         this.$store.dispatch('getAdminListAction', condition).then()
+      },
+      dialogClose() {
+        this.manageForm = Object.assign({}, this.copyForm)
+        this.dialogTitle = true;
       }
     }
   }
