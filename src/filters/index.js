@@ -4,6 +4,8 @@ export function adminTypeFilter(v) {
       return '主管理员'
     case 1:
       return '子管理员'
+    default:
+      return '子管理员'
   }
 }
 export function orderStatusFliter(v) {
@@ -19,6 +21,19 @@ export function orderStatusFliter(v) {
       return '未成功众筹';
   }
 }
+export function pendingStatusFilter(v) {
+
+  switch (v) {
+    case 0:
+      return '挂单中';
+    case 1:
+      return '交易完成';
+    case 4:
+      return '已撤销';
+    default:
+      return '已撤销'
+  }
+}
 export function projectStatusFliter(v) {
 
   switch (v) {
@@ -29,6 +44,8 @@ export function projectStatusFliter(v) {
     case 2:
       return '已结束'
     case 9:
+      return '取消'
+    default:
       return '取消'
   }
 }

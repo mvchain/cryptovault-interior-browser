@@ -30,7 +30,7 @@
           label="操作">
           <template slot-scope="scope">
             <el-button @click="editManage(scope.row)" size="small">编辑</el-button>
-            <el-button @click="deleteManage(scope.row.id)" size="small" v-if="adminType === '0' && manage.userId !== scope.row.id">删除</el-button>
+            <el-button @click="deleteManage(scope.row.id)" size="small" v-if="manage.userId !== scope.row.id">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -57,22 +57,22 @@
         <el-form-item v-else="!dialogTitle" label="登录密码：" :label-width="formLabelWidth" >
           <el-button size="small" @click="modifyFlag = true">修改</el-button>
         </el-form-item>
-        <el-form-item class="admin-form-item"  label="充提控制："  :label-width="formLabelWidth">
+        <el-form-item v-if="adminType === '0'" class="admin-form-item"  label="充提控制："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[0].status"></el-switch>
         </el-form-item>
-        <el-form-item class="admin-form-item" label="用户控制："  :label-width="formLabelWidth">
+        <el-form-item v-if="adminType === '0'" class="admin-form-item" label="用户控制："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[1].status"></el-switch>
         </el-form-item>
-        <el-form-item class="admin-form-item" label="币种控制："  :label-width="formLabelWidth">
+        <el-form-item v-if="adminType === '0'" class="admin-form-item" label="币种控制："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[2].status"></el-switch>
         </el-form-item>
-        <el-form-item class="admin-form-item" label="众筹控制："  :label-width="formLabelWidth">
+        <el-form-item v-if="adminType === '0'" class="admin-form-item" label="众筹控制："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[3].status"></el-switch>
         </el-form-item>
-        <el-form-item class="admin-form-item" label="交易控制："  :label-width="formLabelWidth">
+        <el-form-item v-if="adminType === '0'" class="admin-form-item" label="交易控制："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[4].status"></el-switch>
         </el-form-item>
-        <el-form-item class="admin-form-item" label="禁用："  :label-width="formLabelWidth">
+        <el-form-item v-if="adminType === '0'" class="admin-form-item" label="禁用："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.status"></el-switch>
         </el-form-item>
       </el-form>
@@ -177,7 +177,6 @@
       })
     },
     mounted() {
-      // ?createdStartAt=1&createdStopAt=2&orderBy=3&pageNum=3&pageSize=4&updatedStartAt=5&updatedStopAt=6
       this.getTableData('?pageNum=1&pageSize=20');
       this.copyForm = Object.assign({}, this.manageForm);
     },
@@ -202,7 +201,7 @@
       },
       handleCurrentChange(v) {
         this.pageNum = v;
-        this.getTableData(`pageNum=${this.pageNum}&pageSize=20`);
+        this.getTableData(`?pageNum=${this.pageNum}&pageSize=20`);
       },
       subForm(form) {
         this.subFlag = true;
@@ -213,7 +212,7 @@
               this.dialogFormVisible = false;
               this.$refs[form].resetFields();
               this.$message.success('提交成功');
-              this.getTableData('pageNum=1&pageSize=20');
+              this.getTableData('?pageNum=1&pageSize=20');
             }).catch(() => {
               this.subFlag = false
             })
@@ -234,6 +233,7 @@
             this.$store.dispatch('putModifyPwd', this.pwdForm).then(() => {
               this.pwdFlag = false;
               this.$refs[form].resetFields();
+              this.$message.success('修改成功')
             }).catch(() => {
               this.subFlag = false
             })

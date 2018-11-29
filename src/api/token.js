@@ -19,9 +19,9 @@ export function modifyToken(id, data) {
     data
   })
 }
-export function tokenPair(data) {
+export function tokenPair() {
   return request({
-    url: '/token/pair' + data,
+    url: '/token/pair',
     method: 'get'
   })
 }
@@ -64,3 +64,4 @@ export function tokenTx(data) {
     method: 'get',
   })
 }
+

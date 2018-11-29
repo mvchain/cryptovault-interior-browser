@@ -11,3 +11,9 @@ export function txOver(data) {
     method: 'get'
   })
 }
+export function deleteTx(data) {
+  return request({
+    url: '/transaction/' + data,
+    method: 'delete'
+  })
+}

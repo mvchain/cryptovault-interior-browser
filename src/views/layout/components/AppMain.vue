@@ -12,15 +12,17 @@ export default {
   name: 'AppMain',
   data() {
     return {
-      permission: window.localStorage.getItem('permission'),
+      permission: '',
       manage: {},
-      adminType: window.localStorage.getItem('adminType')
+      adminType: ''
     }
   },
-  mounted() {
-    const us = window.localStorage.getItem('user')
+  created() {
+    const us = window.localStorage.getItem('user');
     if (us) {
-      this.manage = JSON.parse(us)
+      this.manage = JSON.parse(us);
+      this.permissionList = window.localStorage.getItem('permission');
+      this.adminType = window.localStorage.getItem('adminType');
     }
   }
 }

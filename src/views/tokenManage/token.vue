@@ -2,7 +2,7 @@
   <div class="token">
     <el-row style="margin-bottom:20px;">
       <el-col :span="18">
-        <el-button type="success" @click="dialogFormVisible = true" v-if="adminType === '0'">新建币种</el-button>
+        <el-button type="success" @click="dialogFormVisible = true" v-if="permission.includes('3')">新建币种</el-button>
       </el-col>
       <el-col :span="6">
         <el-input clearable placeholder="输入币种缩写" v-model="searchText">
@@ -64,11 +64,12 @@
       </el-table-column>
       <el-table-column
         width="300"
+        v-if="permission.includes('3')"
         label="操作">
         <template slot-scope="scope">
-          <el-button size="small" @click="parameterHandler(scope.row.tokenId)">参数设置</el-button>
-          <el-button size="small" @click="transactionHandler(scope.row.tokenId)">消息设置</el-button>
-          <el-button size="small" @click="editToken(scope.row.tokenId)">编辑</el-button>
+          <el-button  size="small" @click="parameterHandler(scope.row.tokenId)">参数设置</el-button>
+          <el-button  size="small" @click="transactionHandler(scope.row.tokenId)">消息设置</el-button>
+          <el-button  size="small" @click="editToken(scope.row.tokenId)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>

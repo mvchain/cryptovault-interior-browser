@@ -2,7 +2,7 @@
   <div class="order">
     <el-row>
       <el-col :span="18">
-        <el-select @change="statusChange" v-model="orderStatus" placeholder="请选择">
+        <el-select @change="orderData" v-model="orderStatus" placeholder="请选择">
           <el-option
             v-for="item in statusList"
             :key="item.id"
@@ -14,7 +14,7 @@
           v-model="rechargeTime"
           type="daterange"
           align="right"
-          @change="timeChangeFun"
+          @change="orderData"
           :clearable="true"
           value-format="timestamp"
           :default-time="['00:00:00', '23:59:59']"
@@ -134,9 +134,6 @@
       orderData() {
         this.$store.dispatch('getProjectOrderList', `?cellphone=${this.cellphone}&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&pageNum=${this.pageNum}&pageSize=20&projectName=${this.projectName}&status=${this.orderStatus}`)
       },
-      timeChangeFun() {
-        this.orderData()
-      },
       searchHandler() {
         if(!(/^1[345789]\d{9}$/.test(this.searchText))){
           this.cellphone = '';
@@ -145,9 +142,6 @@
           this.cellphone = this.searchText;
           this.projectName = '';
         }
-        this.orderData()
-      },
-      statusChange() {
         this.orderData()
       },
       exportTable() {},

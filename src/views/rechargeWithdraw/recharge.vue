@@ -6,7 +6,7 @@
           v-model="rechargeTime"
           type="daterange"
           align="right"
-          @change="timeChangeFun"
+          @change="withdrawData"
           :clearable="true"
           value-format="timestamp"
           :default-time="['00:00:00', '23:59:59']"
@@ -103,9 +103,6 @@
           this.fromAddress = this.searchText;
           this.hash = '';
         }
-        this.withdrawData()
-      },
-      timeChangeFun() {
         this.withdrawData()
       },
       handleCurrentChange() {

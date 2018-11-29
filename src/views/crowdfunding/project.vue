@@ -1,6 +1,6 @@
 <template>
   <div class="project">
-    <div>
+    <div v-if="adminType === '0'">
       <el-button @click="dialogFlag = true;createFlag = true;" type="success">新建项目</el-button>
     </div>
     <div style="margin-top:20px;">
@@ -39,10 +39,11 @@
           </template>
         </el-table-column>
         <el-table-column
+          v-if="adminType === '0'"
           label="操作">
           <template slot-scope="scope">
-            <el-button @click="editProjectFun(scope.row.id)" size="small">编辑</el-button>
-            <el-button @click="deleteProjectFun(scope.row.id)" size="small">删除</el-button>
+            <el-button  @click="editProjectFun(scope.row.id)" size="small">编辑</el-button>
+            <el-button  @click="deleteProjectFun(scope.row.id)" size="small">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -120,8 +121,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFlag = false">取 消</el-button>
-        <el-button :loading="subFlag" type="primary" @click="subForm('projectForm')">确 定</el-button>
+        <el-button size="small" @click="dialogFlag = false">取 消</el-button>
+        <el-button size="small" :loading="subFlag" type="primary" @click="subForm('projectForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -132,6 +133,9 @@
   import oss from '../../components/ossload'
   export default {
     name: 'project',
+    props: {
+      adminType: String
+    },
     computed: {
       ...mapGetters({
         projectList: 'projectList',

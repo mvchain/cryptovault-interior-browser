@@ -1,11 +1,15 @@
-import { tokenList, createToken, modifyTokenSetting, modifyTokenTx, tokenSetting, tokenTx } from '@/api/token';
+import { tokenList, createToken, modifyTokenSetting, modifyTokenTx, tokenSetting, tokenTx, tokenPair } from '@/api/token';
 const token = {
   state: {
-    tokenList: []
+    tokenList: [],
+    tokenPairList: []
   },
   mutations: {
     SET_TOKEN_LIST: (state, payload) => {
       state.tokenList = payload
+    },
+    SET_TOKEN_PAIR: (state, payload) => {
+      state.tokenPairList = payload
     }
   },
   actions: {
@@ -68,6 +72,16 @@ const token = {
       return new Promise((resolve, reject) => {
         tokenTx(payload).then((res) => {
           resolve(res.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    getTokenPair({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        tokenPair().then((res) => {
+          commit('SET_TOKEN_PAIR', res.data);
+          resolve()
         }).catch(error => {
           reject(error)
         })

@@ -17,7 +17,9 @@ const getters = {
   projectOrderList: state => state.project.projectOrderList,
 
   tokenList: state => state.token.tokenList,
+  tokenPairList: state => state.token.tokenPairList,
 
-  txList: state => state.transaction.txList
+  txList: state => state.transaction.txList,
+  overList: state => state.transaction.overList
 }
 export default getters

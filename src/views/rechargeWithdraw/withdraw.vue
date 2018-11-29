@@ -5,7 +5,7 @@
         <el-button style="margin-right:20px;" @click="multipleFun">同意已勾选</el-button>
         <el-button style="margin-right:20px;">导出</el-button>
         <el-button style="margin-right:20px;">导入</el-button>
-        <el-select @change="statusChange" v-model="companyStatus" placeholder="请选择">
+        <el-select @change="withdrawData" v-model="companyStatus" placeholder="请选择">
           <el-option
             v-for="item in statusList"
             :key="item.id"
@@ -17,7 +17,7 @@
           v-model="rechargeTime"
           type="daterange"
           align="right"
-          @change="timeChangeFun"
+          @change="withdrawData"
           :clearable="true"
           value-format="timestamp"
           :default-time="['00:00:00', '23:59:59']"
@@ -77,7 +77,7 @@
         <el-table-column
           label="状态">
           <template slot-scope="scope" >
-            <el-dropdown v-if="scope.row.transactionStatus === 1" @command="handleCommand" :disabled="true">
+            <el-dropdown v-if="scope.row.transactionStatus === 1 && (permission.includes('1'))" @command="handleCommand" :disabled="true">
               <span class="el-dropdown-link">
                 待审核<i class="el-icon-arrow-down el-icon--right"></i>
               </span>
@@ -86,9 +86,9 @@
                 <el-dropdown-item :command="{id: scope.row.id, status: 2}">拒绝</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-dropdown v-else-if="scope.row.transactionStatus === 2 " @command="handleCommand" :disabled="true">
+            <el-dropdown v-else-if="scope.row.transactionStatus === 2 && (permission.includes('1')) " @command="handleCommand" :disabled="true">
              <span class="el-dropdown-link" :title="scope.row.errorData">
-                失败:{{scope.row.errorMsg}}<i class="el-icon-arrow-down el-icon--right"></i>
+                待签名{{scope.row.errorMsg}}<i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item  :command="{id: scope.row.id, status: 2}">拒绝</el-dropdown-item>
@@ -115,6 +115,11 @@
   import { mapGetters } from 'vuex'
   export default {
     name: 'withdraw',
+    props: {
+      permission: String,
+      adminType: String,
+      manage: Object
+    },
     data() {
       return {
         statusList: [
@@ -171,6 +176,7 @@
         this.multipleTable = v;
       },
       multipleFun() {
+        if (this.multipleTable.length === 0) return;
         let arr = [];
         for (let i = 0; i < this.multipleTable.length; i++) {
           arr.push(this.multipleTable[i].id)
@@ -189,10 +195,7 @@
       isSelectHandler(v) {
         return v.transactionStatus === 1;
       },
-      statusChange(v) {
-        this.companyStatus = v;
-        this.withdrawData()
-      },
+
       exportTable() {
         console.log(this.rechargeTime)
       },
@@ -210,9 +213,7 @@
         }
         this.withdrawData()
       },
-      timeChangeFun() {
-        this.withdrawData()
-      },
+
       handleCurrentChange(v) {
         this.pageNum = v;
         this.withdrawData()
