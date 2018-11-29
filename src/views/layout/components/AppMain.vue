@@ -19,9 +19,10 @@ export default {
   },
   created() {
     const us = window.localStorage.getItem('user');
+    this.permission = window.localStorage.getItem('permission');
     if (us) {
       this.manage = JSON.parse(us);
-      this.permission = window.localStorage.getItem('permission');
+
       this.adminType = window.localStorage.getItem('adminType');
     }
   }

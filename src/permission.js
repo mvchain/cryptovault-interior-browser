@@ -9,7 +9,7 @@ router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
     store.dispatch('getAdminInfo', `/${JSON.parse(window.localStorage.getItem('user')).userId}`).then((res) => {
-      window.localStorage.setItem('permission', res.permissions)
+      window.localStorage.setItem('permission', res.permissions);
       window.localStorage.setItem('adminType', res.adminType)
     }).catch();
     if (to.path === '/login') {

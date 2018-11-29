@@ -116,7 +116,6 @@
   export default {
     name: 'withdraw',
     props: {
-      permission: String,
       adminType: String,
       manage: Object
     },
@@ -163,7 +162,8 @@
     },
     computed: {
       ...mapGetters({
-        blockTxList: 'blockTxList'
+        blockTxList: 'blockTxList',
+        permission: 'permission'
       }),
 
     },

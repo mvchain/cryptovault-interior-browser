@@ -1,6 +1,6 @@
 <template>
   <div class="project">
-    <div v-if="adminType === '0'">
+    <div v-if="permission.includes('4')">
       <el-button @click="dialogFlag = true;createFlag = true;" type="success">新建项目</el-button>
     </div>
     <div style="margin-top:20px;">
@@ -39,7 +39,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          v-if="adminType === '0'"
+          v-if="permission.includes('4')"
           label="操作">
           <template slot-scope="scope">
             <el-button  @click="editProjectFun(scope.row.id)" size="small">编辑</el-button>
@@ -139,7 +139,8 @@
     computed: {
       ...mapGetters({
         projectList: 'projectList',
-        tokenList: 'tokenList'
+        tokenList: 'tokenList',
+        permission: 'permission'
       })
     },
     components: {

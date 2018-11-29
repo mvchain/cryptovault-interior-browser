@@ -123,14 +123,14 @@
   export default {
     name: 'pending',
     props: {
-      permission: String,
       adminType: String,
       manage: Object
     },
     computed: {
       ...mapGetters({
         txList: 'txList',
-        tokenPairList: 'tokenPairList'
+        tokenPairList: 'tokenPairList',
+        permission: 'permission'
       })
     },
     mounted() {

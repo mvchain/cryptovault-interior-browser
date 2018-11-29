@@ -6,6 +6,7 @@ const getters = {
   roles: state => state.login.roles,
 
   adminList: state => state.admin.adminList,
+  permission: state => state.admin.permission,
 
   userList: state => state.user.userList,
   userBalanceList: state => state.user.userBalanceList,

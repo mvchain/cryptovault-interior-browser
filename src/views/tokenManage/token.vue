@@ -187,7 +187,6 @@
   export default {
     name: 'token',
     props: {
-      permission: String,
       adminType: String,
       manage: Object
     },
@@ -341,7 +340,8 @@
     },
     computed: {
       ...mapGetters({
-        tokenList: 'tokenList'
+        tokenList: 'tokenList',
+        permission: 'permission'
       })
     },
     mounted() {

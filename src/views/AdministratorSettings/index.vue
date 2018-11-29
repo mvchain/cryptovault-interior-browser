@@ -103,7 +103,6 @@
   export default {
     name: 'AdministratorSettings',
     props: {
-      permission: String,
       adminType: String,
       manage: Object
     },
@@ -173,7 +172,8 @@
     },
     computed: {
       ...mapGetters({
-        adminList: 'adminList'
+        adminList: 'adminList',
+        permission: 'permission'
       })
     },
     mounted() {
