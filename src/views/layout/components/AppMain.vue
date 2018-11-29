@@ -21,7 +21,7 @@ export default {
     const us = window.localStorage.getItem('user');
     if (us) {
       this.manage = JSON.parse(us);
-      this.permissionList = window.localStorage.getItem('permission');
+      this.permission = window.localStorage.getItem('permission');
       this.adminType = window.localStorage.getItem('adminType');
     }
   }
