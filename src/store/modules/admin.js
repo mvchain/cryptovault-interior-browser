@@ -3,7 +3,8 @@ import {createAdmin, deleteAdmin, modifyAdmin, getadminList, adminPwd, ossObjHan
 const admin = {
   state: {
     adminList: {},
-    permission: ''
+    permission: '',
+    adminType: ''
   },
 
   mutations: {
@@ -12,6 +13,9 @@ const admin = {
     },
     SET_PERMISSION: (state, payload) => {
       state.permission = payload
+    },
+    SET_ADMIN_TYPE: (state, payload) => {
+      state.adminType = payload
     }
   },
 
@@ -65,7 +69,17 @@ const admin = {
     getAdminInfo({commit, state}, payload) {
       return new Promise((resolve, reject) => {
         getadminList(payload).then((res) => {
-          commit('SET_PERMISSION', res.data.permissions)
+          commit('SET_PERMISSION', res.data.permissions);
+          commit('SET_ADMIN_TYPE', res.data.adminType.toString());
+          resolve(res.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    getAdminInfoEdit({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        getadminList(payload).then((res) => {
           resolve(res.data)
         }).catch(error => {
           reject(error)

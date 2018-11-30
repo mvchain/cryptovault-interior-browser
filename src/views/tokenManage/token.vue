@@ -2,7 +2,7 @@
   <div class="token">
     <el-row style="margin-bottom:20px;">
       <el-col :span="18">
-        <el-button type="success" @click="dialogFormVisible = true" v-if="permission.includes('3')">新建币种</el-button>
+        <el-button type="success" @click="dialogFormVisible = true; editFlag = false;" v-if="permission.includes('3')">新建币种</el-button>
       </el-col>
       <el-col :span="6">
         <el-input clearable placeholder="输入币种缩写" v-model="searchText">
@@ -68,7 +68,7 @@
         label="操作">
         <template slot-scope="scope">
           <el-button  size="small" @click="parameterHandler(scope.row.tokenId)">参数设置</el-button>
-          <el-button  size="small" @click="transactionHandler(scope.row.tokenId)">消息设置</el-button>
+          <el-button  size="small" @click="transactionHandler(scope.row.tokenId)">交易设置</el-button>
           <el-button  size="small" @click="editToken(scope.row.tokenId)">编辑</el-button>
         </template>
       </el-table-column>
@@ -99,7 +99,7 @@
         <el-button :loading="subFlag" type="primary" @click="subTokenForm('tokenForm')">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog width="500px"  :visible.sync="parameterDialog" center>
+    <el-dialog width="500px" :title="'参数设置'" :visible.sync="parameterDialog" center>
       <el-form :rules="parameterRules" :model="parameterForm" ref="parameterForm">
         <el-form-item prop="withdrawMinMax" label="单笔提币上下线区间" :label-width="parameterWidth" >
           <el-input :disabled="parameterForm.inner === 1" v-model="parameterForm.withdrawMin" class="parameter-input"></el-input>
@@ -112,6 +112,28 @@
         <el-form-item prop="fee" label="提币手续费" :label-width="parameterWidth" >
           <el-input :disabled="parameterForm.inner === 1" v-model="parameterForm.fee" ></el-input>
         </el-form-item>
+
+
+        <el-form-item :label="parameterForm.id === 4 ? '交易手续费': 'GasPrice(Gwei)'" :label-width="parameterWidth" >
+          <el-slider
+            v-model="parameterForm.transaferFee"
+            :min="parameterForm.id === 4 ? feeObj.usdt.min : feeObj.eth.min"
+            :max="parameterForm.id === 4 ? feeObj.usdt.max : feeObj.eth.max"
+            :step="parameterForm.id === 4 ? feeObj.usdt.step : feeObj.eth.step"
+          >
+          </el-slider>
+        </el-form-item>
+        <el-form-item prop="fee" label="汇总保留" :label-width="parameterWidth" >
+          <el-slider
+            v-model="parameterForm.hold"
+            :min="parameterForm.id === 4 ? holdObj.usdt.min : holdObj.eth.min"
+            :max="parameterForm.id === 4 ? holdObj.usdt.max : holdObj.eth.max"
+            :step="parameterForm.id === 4 ? holdObj.usdt.step : holdObj.eth.step"
+          >
+          </el-slider>
+        </el-form-item>
+
+
         <el-form-item  class="parameter-label-item"  label="VRT交易区" :label-width="parameterWidth" >
           <el-switch :active-value="1" :inactive-value="0" v-model="parameterForm.vrt" ></el-switch>
         </el-form-item>
@@ -133,7 +155,7 @@
         <el-button :loading="subFlag" type="primary" @click="subParameterForm('parameterForm')">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog width="500px"  :visible.sync="transactionDialog" center>
+    <el-dialog width="500px" :title="'交易设置'" :visible.sync="transactionDialog" center>
       <el-form :rules="transactionRules" :model="transactionForm" ref="transactionForm">
         <el-form-item prop="startPrice"  label="开盘价格" :label-width="parameterWidth" >
           <el-input v-model="transactionForm.startPrice" ></el-input>
@@ -187,7 +209,6 @@
   export default {
     name: 'token',
     props: {
-      adminType: String,
       manage: Object
     },
     components: {
@@ -238,6 +259,31 @@
       };
       return {
         searchText: '',
+        holdObj: {
+          usdt: {
+            min: 0,
+            max: 100,
+            step:0.1
+          },
+          eth: {
+            min: 1,
+            max: 10000,
+            step:1
+          }
+        },
+        feeObj: {
+          usdt: {
+            min: 0.0001,
+            max: 0.001,
+            step:0.00001
+          },
+          eth: {
+            min: 1,
+            max: 500,
+            step:1
+          }
+        },
+        editFlag: false,
         dialogFormVisible: false,
         subFlag: false,
         parameterDialog: false,
@@ -272,6 +318,8 @@
           id: '',
           balance: 0,
           fee: '',
+          transaferFee: 0,
+          hold: 0,
           recharge: 0,
           vrt: 0,
           withdraw: 0,
@@ -341,7 +389,8 @@
     computed: {
       ...mapGetters({
         tokenList: 'tokenList',
-        permission: 'permission'
+        permission: 'permission',
+        adminType: 'adminType'
       })
     },
     mounted() {
@@ -374,7 +423,7 @@
             if (this.tokenForm.decimals && this.tokenForm.contractAddress) {
               this.tokenForm.blockType = 'ETH';
             }
-            this.$store.dispatch('postTokenList', this.tokenForm).then(() => {
+            this.$store.dispatch(this.editFlag ? 'putTokenList' : 'postTokenList', this.tokenForm).then(() => {
               this.subFlag = false;
               this.dialogFormVisible = false;
               this.$refs[form].resetFields();
@@ -440,6 +489,7 @@
         })
       },
       editToken(tokenName) {
+        this.editFlag = true;
         this.$store.dispatch('getTokenInfo', `/${tokenName}`).then((res) => {
           this.imgName = res.tokenImage;
           this.dialogFormVisible = true;
@@ -447,6 +497,7 @@
         }).catch()
       },
       dialogClose() {
+
         this.tokenForm = Object.assign({},this.dialogCopy);
         this.imgName = '';
       },

@@ -63,7 +63,6 @@
   export default {
     name: 'user',
     props: {
-      adminType: String,
       manage: Object
     },
     data() {
@@ -90,7 +89,8 @@
     computed: {
       ...mapGetters({
         userList: 'userList',
-        permission: 'permission'
+        permission: 'permission',
+        adminType: 'adminType'
       })
     },
     mounted() {

@@ -8,10 +8,7 @@ const whiteList = ['/login'] // 不重定向白名单
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
-    store.dispatch('getAdminInfo', `/${JSON.parse(window.localStorage.getItem('user')).userId}`).then((res) => {
-      window.localStorage.setItem('permission', res.permissions);
-      window.localStorage.setItem('adminType', res.adminType)
-    }).catch();
+    store.dispatch('getAdminInfo', `/${JSON.parse(window.localStorage.getItem('user')).userId}`).then().catch();
     if (to.path === '/login') {
       next({ path: '/' })
     } else {

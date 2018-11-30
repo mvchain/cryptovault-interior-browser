@@ -12,9 +12,9 @@ export function createToken(data) {
     data
   })
 }
-export function modifyToken(id, data) {
+export function modifyToken(data) {
   return request({
-    url: '/token/' + id,
+    url: '/token/' + data.tokenId,
     method: 'put',
     data
   })

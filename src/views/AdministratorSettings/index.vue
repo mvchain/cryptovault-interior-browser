@@ -103,7 +103,6 @@
   export default {
     name: 'AdministratorSettings',
     props: {
-      adminType: String,
       manage: Object
     },
     data() {
@@ -173,7 +172,8 @@
     computed: {
       ...mapGetters({
         adminList: 'adminList',
-        permission: 'permission'
+        permission: 'permission',
+        adminType: 'adminType'
       })
     },
     mounted() {
@@ -185,7 +185,7 @@
         this.pwdForm.id = obj.id;
         this.dialogFormVisible = true;
         this.dialogTitle = false;
-        this.$store.dispatch('getAdminInfo', `/${obj.id}`).then((data) => {
+        this.$store.dispatch('getAdminInfoEdit', `/${obj.id}`).then((data) => {
           this.manageForm = Object.assign({id: obj.id}, data)
         }).catch()
       },

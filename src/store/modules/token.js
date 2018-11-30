@@ -1,4 +1,4 @@
-import { tokenList, createToken, modifyTokenSetting, modifyTokenTx, tokenSetting, tokenTx, tokenPair } from '@/api/token';
+import { tokenList, createToken, modifyTokenSetting, modifyTokenTx, tokenSetting, tokenTx, tokenPair, modifyToken } from '@/api/token';
 const token = {
   state: {
     tokenList: [],
@@ -35,6 +35,15 @@ const token = {
     postTokenList({commit, state}, payload) {
       return new Promise((resolve, reject) => {
         createToken(payload).then((res) => {
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    putTokenList({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        modifyToken(payload).then((res) => {
           resolve()
         }).catch(error => {
           reject(error)

@@ -133,14 +133,13 @@
   import oss from '../../components/ossload'
   export default {
     name: 'project',
-    props: {
-      adminType: String
-    },
+
     computed: {
       ...mapGetters({
         projectList: 'projectList',
         tokenList: 'tokenList',
-        permission: 'permission'
+        permission: 'permission',
+        adminType: 'adminType'
       })
     },
     components: {

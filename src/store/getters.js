@@ -7,6 +7,7 @@ const getters = {
 
   adminList: state => state.admin.adminList,
   permission: state => state.admin.permission,
+  adminType: state => state.admin.adminType,
 
   userList: state => state.user.userList,
   userBalanceList: state => state.user.userBalanceList,

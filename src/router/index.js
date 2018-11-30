@@ -114,7 +114,7 @@ export const constantRouterMap = [
         path: 'order',
         name: 'order',
         component: _import('crowdfunding/order'),
-        meta: { title: '订单提现', icon: 'wallet' }
+        meta: { title: '预约订单', icon: 'wallet' }
       }
     ]
   },
