@@ -105,7 +105,11 @@
         this.$store.dispatch('getUserList', `?pageNum=${this.pageNum}&pageSize=20&cellphone=${this.searchText}&status=${this.userStatus}`);
       },
       enableDisable(opt) {
-        console.log(opt)
+        opt.status = opt.status === 1 ? 0 : 1;
+        this.$store.dispatch('putUserStatus', opt).then(() => {
+          this.$message.success('修改成功');
+          this.userListData();
+        }).catch()
       }
     }
   }

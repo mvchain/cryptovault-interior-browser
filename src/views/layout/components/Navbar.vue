@@ -8,64 +8,11 @@
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu class="user-dropdown" slot="dropdown">
-        <el-dropdown-item >
-          <span @click="dialogFormVisible = true">手续费设置</span>
-        </el-dropdown-item>
-        <el-dropdown-item>
-          <span @click="dialogBalance = true">汇总保留金额</span>
-        </el-dropdown-item>
-
         <el-dropdown-item divided>
           <span @click="logout" style="display:block;">退出</span>
         </el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-    <el-dialog v-if="fee.length&&reserved.length" :close-on-click-modal="false"  width="600px"  title="汇总保留金额" :visible.sync="dialogBalance">
-      <div v-for="(v, k) in reserved" :key="k">
-        <span>{{v.tokenName}}保留：</span>
-        <span>{{v.value}}</span>
-        <el-slider
-          v-model="v.value"
-          :min="fee[k].value"
-          :max="10"
-          :step="0.001"
-        >
-        </el-slider>
-      </div>
-
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogBalance = false">取 消</el-button>
-        <el-button type="primary" @click="setReserve">确 定</el-button>
-      </div>
-    </el-dialog>
-    <el-dialog v-if="fee.length&&reserved.length" :close-on-click-modal="false"  width="600px"  title="转账手续费设置" :visible.sync="dialogFormVisible">
-      <div>
-        <span>{{fee[0].tokenName}}手续费：</span>
-        <span>{{fee[0].value}}</span>
-        <el-slider
-          v-model="fee[0].value"
-          :min="0.0001"
-          :max="0.001"
-          :step="0.00001"
-        >
-        </el-slider>
-      </div>
-      <div>
-        <span>{{fee[1].tokenName}}</span>
-        <span>{{fee[1].value}}</span>
-        <el-slider
-          v-model="fee[1].value"
-          :min="0.000210"
-          :max="0.002100"
-          :step="0.0000021"
-        >
-        </el-slider>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="setFee">确 定</el-button>
-      </div>
-    </el-dialog>
   </el-menu>
 </template>
 
@@ -79,10 +26,7 @@ export default {
     Breadcrumb,
     Hamburger
   },
-  props: {
-    fee: Array,
-    reserved: Array,
-  },
+
   computed: {
     ...mapGetters([
       'sidebar'
@@ -91,8 +35,6 @@ export default {
   data() {
     return {
       avatar: '',
-      dialogFormVisible: false,
-      dialogBalance: false,
     }
   },
   mounted() {

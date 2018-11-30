@@ -1,4 +1,4 @@
-import { userList, userBalance, userLog } from '@/api/user'
+import { userList, userBalance, userLog, userStatus } from '@/api/user'
 
 const user = {
   state: {
@@ -44,6 +44,15 @@ const user = {
       return new Promise((resolve, reject) => {
         userLog(payload).then((res) => {
           commit('SET_LOG_LIST', res.data);
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    putUserStatus({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        userStatus(payload).then((res) => {
           resolve()
         }).catch(error => {
           reject(error)

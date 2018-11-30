@@ -17,3 +17,9 @@ export function userLog(data) {
     method: 'get'
   })
 }
+export function userStatus(data) {
+  return request({
+    url: `/user/${data.id}/status?status=${data.status}`,
+    method: 'put'
+  })
+}
