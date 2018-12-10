@@ -1,4 +1,4 @@
-import {createAdmin, deleteAdmin, modifyAdmin, getadminList, adminPwd, ossObjHandler} from '@/api/admin'
+import {createAdmin, deleteAdmin, modifyAdmin, getadminList, adminPwd, ossObjHandler, sign} from '@/api/admin'
 
 const admin = {
   state: {
@@ -89,6 +89,15 @@ const admin = {
     getOssObj: ({ commit, state }) => {
       return new Promise((resolve, reject) => {
         ossObjHandler().then(res => {
+          resolve(res.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    getSign: ({ commit, state }) => {
+      return new Promise((resolve, reject) => {
+        sign().then(res => {
           resolve(res.data)
         }).catch(error => {
           reject(error)

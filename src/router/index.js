@@ -155,9 +155,29 @@ export const constantRouterMap = [
       }
     ]
   },
+  {
+    path: '/wallet',
+    component: Layout,
+    redirect: '/wallet/walletManage',
+    meta: { title: '钱包', icon: 'wallet' },
+    children: [
+      {
+        path: 'walletManage',
+        name: 'walletManage',
+        component: _import('wallet/walletManage'),
+        meta: { title: '钱包管理', icon: 'wallet' }
+      },
+      {
+        path: 'walletWithdraw',
+        name: 'walletWithdraw',
+        component: _import('wallet/walletWithdraw'),
+        meta: { title: '钱包提币', icon: 'wallet' }
+      }
+    ]
+  },
 
   { path: '*', redirect: '/404', hidden: true }
-]
+];
 
 export default new Router({
   // mode: 'history', //后端支持可开

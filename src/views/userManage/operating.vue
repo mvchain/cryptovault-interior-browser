@@ -74,12 +74,14 @@
     },
     methods: {
       exportTable() {
-        console.log(this.rechargeTime)
+        this.$store.dispatch('getSign').then((s) => {
+          window.open(`${window.urlData.url}/user/${this.$route.query.id}/log/excel?createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&pageNum=1&pageSize=${this.userLogList.total}&sign=${s}`)
+        }).catch()
       },
       timeChangeFun() {
         let str = '';
         if (this.rechargeTime) {
-          str = `?orderBy=created_at desc&pageNum=${this.pageNum}&pageSize=20&createdStartAt=${this.rechargeTime[0]}&createdStopAt=${this.rechargeTime[1]}`;
+          str = `?orderBy=created_at desc&pageNum=${this.pageNum}&pageSize=20&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}`;
         } else {
           str = `?orderBy=created_at desc&pageNum=${this.pageNum}&pageSize=20`;
         }

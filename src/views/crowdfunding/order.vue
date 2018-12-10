@@ -24,7 +24,7 @@
           end-placeholder="结束日期"
         >
         </el-date-picker>
-        <el-button @click="exportTable">导出表格</el-button>
+        <el-button :loading="exportFlag" @click="exportTable">导出表格</el-button>
       </el-col>
       <el-col :span="6">
         <el-input clearable placeholder="输入项目名称、手机号" v-model="searchText" class="input-with-select">
@@ -127,7 +127,8 @@
             id: 9,
             name: '未成功众筹'
           }
-        ]
+        ],
+        exportFlag: false
       }
     },
     methods: {
@@ -144,7 +145,15 @@
         }
         this.orderData()
       },
-      exportTable() {},
+      exportTable() {
+        this.exportFlag = true;
+        this.$store.dispatch('getSign').then((s) => {
+          window.open(`${window.urlData.url}/project/order/excel?cellphone=${this.cellphone}&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&pageNum=1&pageSize=${this.projectOrderList.total}&projectName=${this.projectName}&status=${this.orderStatus}&sign=${s}`)
+          this.exportFlag = false
+        }).catch(() => {
+          this.exportFlag = false
+        })
+      },
       handleCurrentChange(v) {
         this.pageNum = v;
         this.orderData()

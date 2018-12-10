@@ -25,3 +25,16 @@ export function blockTx(data) {
     method: 'get',
   })
 }
+export function addrInfo() {
+  return request({
+    url: '/block/wallet',
+    method: 'get',
+  })
+}
+export function postBlockTx(data) {
+  return request({
+    url: '/block/transaction',
+    method: 'post',
+    data
+  })
+}

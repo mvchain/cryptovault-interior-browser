@@ -40,3 +40,9 @@ export function ossObjHandler() {
     method: 'get'
   })
 }
+export function sign() {
+  return request({
+    url: '/admin/export/sign',
+    method: 'get'
+  })
+}

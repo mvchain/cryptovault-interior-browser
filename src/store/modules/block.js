@@ -1,4 +1,4 @@
-import { blockTx, blockStatus } from '@/api/block';
+import { blockTx, blockStatus, addrInfo, postBlockTx } from '@/api/block';
 const block = {
   state: {
     blockTxList: {}
@@ -25,6 +25,24 @@ const block = {
       return new Promise((resolve, reject) => {
         blockStatus(payload).then((res) => {
           resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    getAddrInfo({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        addrInfo(payload).then((res) => {
+          resolve( res.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    postTx({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        postBlockTx(payload).then((res) => {
+          resolve()
         }).catch(error => {
           reject(error)
         })

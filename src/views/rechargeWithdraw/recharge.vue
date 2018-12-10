@@ -2,6 +2,8 @@
   <div class="recharge">
     <el-row>
       <el-col :span="18">
+        <el-button @click="summaryFun" style="margin-right:8px;">汇总导出</el-button>
+        <import-component :action="action" :labelTxt="'签名文件导入'"></import-component>
         <el-date-picker
           v-model="rechargeTime"
           type="daterange"
@@ -68,6 +70,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
+  import importComponents from '../../components/import-component'
   export default {
     name: 'recharge',
     data() {
@@ -76,7 +79,9 @@
         searchText: '',
         pageNum: 1,
         hash: '',
-        fromAddress: ''
+        fromAddress: '',
+        exportFlag: false,
+        action: window.urlData.url + '/block/sign/import',
       }
     },
     computed: {
@@ -84,12 +89,30 @@
         blockTxList: 'blockTxList'
       })
     },
+    components: {
+      'import-component': importComponents
+    },
     mounted() {
       this.withdrawData();
     },
     methods: {
+      summaryFun() {
+        this.exportFlag = true;
+        this.$store.dispatch('getSign').then((s) => {
+          window.open(`${window.urlData.url}/block/collect/export?sign=${s}`)
+          this.exportFlag = false
+        }).catch(() => {
+          this.exportFlag = false
+        })
+      },
       exportTable() {
-        console.log(this.rechargeTime)
+        this.exportFlag = true;
+        this.$store.dispatch('getSign').then((s) => {
+          window.open(`${window.urlData.url}/block/transactions/excel?createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&fromAddress=${this.fromAddress}&oprType=1&pageNum=1&pageSize=${this.blockTxList.total}&sign=${s}`)
+          this.exportFlag = false
+        }).catch(() => {
+          this.exportFlag = false
+        })
       },
       searchHandler() {
         this.searchText = this.searchText.replace(/\s/g, '');

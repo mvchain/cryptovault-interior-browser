@@ -2,9 +2,9 @@
   <div class="company-withdraw">
     <el-row>
       <el-col :span="18">
-        <el-button style="margin-right:20px;" @click="multipleFun">同意已勾选</el-button>
-        <el-button style="margin-right:20px;">导出</el-button>
-        <el-button style="margin-right:20px;">导入</el-button>
+        <el-button style="margin-right:20px;" @click="multipleFun" v-if="permission.includes('1')">同意已勾选</el-button>
+        <el-button v-if="adminType === '0'" :loading="exportFlag" @click="exportsSign" style="margin-right:20px;">待签名文件导出</el-button>
+        <import-component v-if="permission.includes('1')" :action="action" :labelTxt="'签名文件导入'"></import-component>
         <el-select @change="withdrawData" v-model="companyStatus" placeholder="请选择">
           <el-option
             v-for="item in statusList"
@@ -27,7 +27,7 @@
           end-placeholder="结束日期"
         >
         </el-date-picker>
-        <el-button @click="exportTable">导出表格</el-button>
+        <el-button v-if="permission.includes('1')" :loading="exportFlag" @click="exportTable">导出表格</el-button>
       </el-col>
       <el-col :span="6">
         <el-input clearable placeholder="输入单号、目标地址" v-model="searchText" class="input-with-select">
@@ -113,6 +113,7 @@
 
 <script>
   import { mapGetters } from 'vuex'
+  import importComponents from '../../components/import-component'
   export default {
     name: 'withdraw',
     props: {
@@ -156,8 +157,13 @@
         pageNum: 1,
         toAddress: '',
         orderNumber: '',
-        multipleTable: []
+        multipleTable: [],
+        exportFlag: false,
+        action: window.urlData.url + '/block/sign/import',
       }
+    },
+    components: {
+      'import-component': importComponents
     },
     computed: {
       ...mapGetters({
@@ -165,13 +171,21 @@
         permission: 'permission',
         adminType: 'adminType'
       }),
-
     },
 
     mounted() {
       this.withdrawData()
     },
     methods: {
+      exportsSign() {
+        this.exportFlag = true;
+        this.$store.dispatch('getSign').then((s) => {
+          window.open(`${window.urlData.url}/block/transaction/export?sign=${s}`)
+          this.exportFlag = false;
+        }).catch(() => {
+          this.exportFlag = false;
+        })
+      },
       handleSelectionChange(v) {
         this.multipleTable = v;
       },
@@ -197,7 +211,13 @@
       },
 
       exportTable() {
-        console.log(this.rechargeTime)
+        this.exportFlag = true;
+        this.$store.dispatch('getSign').then((s) => {
+          window.open(`${window.urlData.url}/block/transactions/excel?createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&toAddress=${this.toAddress}&orderNumber=${this.orderNumber}&oprType=2&pageNum=1&pageSize=${this.blockTxList.total}&transactionStatus=${this.companyStatus}&sign=${s}`)
+          this.exportFlag = false;
+        }).catch(() => {
+          this.exportFlag = false;
+        })
       },
       searchHandler() {
         this.searchText = this.searchText.replace(/\s/g, '');

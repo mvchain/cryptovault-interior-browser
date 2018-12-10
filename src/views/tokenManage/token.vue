@@ -185,6 +185,9 @@
           ——
           <el-input v-model="transactionForm.waveMax" class="parameter-input"></el-input>
         </el-form-item>
+        <el-form-item prop="minLimit" label="最小挂单数量" :label-width="parameterWidth" >
+          <el-input v-model="transactionForm.minLimit" class="parameter-input"></el-input>
+        </el-form-item>
         <el-form-item prop="priceBase" label="价格波动交易金额" :label-width="parameterWidth" >
           <el-input v-model="transactionForm.priceBase" class="parameter-input"></el-input>
         </el-form-item>
@@ -344,6 +347,7 @@
           increaseMin: '',
           decreaseMax: '',
           tokenId: '',
+          minLimit: '',
           decreaseMin: '',
           buyMin: '',
           buyMax: '',
@@ -357,6 +361,9 @@
           transactionStatus: 0
         },
         transactionRules: {
+          minLimit: [
+            { required: true, message: '请输入最小挂单交易数量', trigger: 'blur' }
+          ],
           startPrice: [
             { required: true, message: '请输入开盘价格', trigger: 'blur' }
           ],
