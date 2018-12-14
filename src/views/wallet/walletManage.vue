@@ -27,6 +27,13 @@
           <a target="_blank" :href="`https://etherscan.io/address/${addrList.usdtCold}`">{{addrList.usdtCold}}</a>
         </p>
       </el-col>
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
+        <div><img :src="tokenAddr[2]" alt=""></div>
+        <h3>USDT热钱包地址</h3>
+        <p>
+          <a target="_blank" :href="`https://etherscan.io/address/${addrList.usdtHot}`">{{addrList.usdtHot}}</a>
+        </p>
+      </el-col>
     </el-row>
   </div>
 </template>
