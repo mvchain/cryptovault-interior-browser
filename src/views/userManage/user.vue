@@ -105,11 +105,17 @@
         this.$store.dispatch('getUserList', `?pageNum=${this.pageNum}&pageSize=20&cellphone=${this.searchText}&status=${this.userStatus}`);
       },
       enableDisable(opt) {
-        opt.status = opt.status === 1 ? 0 : 1;
-        this.$store.dispatch('putUserStatus', opt).then(() => {
-          this.$message.success('修改成功');
-          this.userListData();
-        }).catch()
+        this.$confirm(`是否${opt.status === 1 ? '禁用' : '启用'}此用户?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          opt.status = opt.status === 1 ? 0 : 1;
+          this.$store.dispatch('putUserStatus', opt).then(() => {
+            this.$message.success('修改成功');
+            this.userListData();
+          }).catch()
+        }).catch(() => {});
       }
     }
   }
