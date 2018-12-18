@@ -1,7 +1,7 @@
 <template>
   <div class="wallet-manage">
     <div class="wallet-title">
-      <import-component v-if="adminType === '0'" :action="action" :labelTxt="'签名文件导入'"></import-component>
+      <import-component v-if="adminType === '0'" :action="action" :labelTxt="'导入地址'"></import-component>
       <span>USDT地址库存：{{addrList.usdtAddressCount}}</span>
       <span>ETH地址库存：{{addrList.ethAddressCount}}</span>
     </div>
@@ -57,7 +57,7 @@ export default {
     return {
       tokenAddr: [],
       addrList: {},
-      action: window.urlData.url + '/block/sign/import',
+      action: window.urlData.url + '/block/account/import',
     }
   },
   mounted() {
