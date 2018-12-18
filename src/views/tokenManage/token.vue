@@ -101,15 +101,15 @@
     </el-dialog>
     <el-dialog width="500px" :title="'参数设置'" :visible.sync="parameterDialog" center>
       <el-form :rules="parameterRules" :model="parameterForm" ref="parameterForm">
-        <el-form-item prop="withdrawMinMax" label="单笔提币上下线区间" :label-width="parameterWidth" >
+        <el-form-item  label="单笔提币上下线区间" :label-width="parameterWidth" >
           <el-input :disabled="parameterForm.inner === 1" v-model="parameterForm.withdrawMin" class="parameter-input"></el-input>
           ——
           <el-input :disabled="parameterForm.inner === 1" v-model="parameterForm.withdrawMax" class="parameter-input"></el-input>
         </el-form-item>
-        <el-form-item prop="withdrawDay"  label="每日提币上限" :label-width="parameterWidth" >
+        <el-form-item label="每日提币上限" :label-width="parameterWidth" >
           <el-input :disabled="parameterForm.inner === 1" v-model="parameterForm.withdrawDay" ></el-input>
         </el-form-item>
-        <el-form-item prop="fee" label="提币手续费" :label-width="parameterWidth" >
+        <el-form-item  :label-width="parameterWidth" >
           <el-input :disabled="parameterForm.inner === 1" v-model="parameterForm.fee" ></el-input>
         </el-form-item>
 

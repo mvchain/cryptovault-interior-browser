@@ -98,7 +98,7 @@
         </el-form-item>
         <el-form-item prop="startedAt" class="project-form-inline" label="开始时间"  :label-width="formLabelWidth">
           <el-date-picker
-            type="date"
+            type="datetime"
             v-model="projectForm.startedAt"
             value-format="timestamp"
             placeholder="选择日期">
@@ -107,7 +107,7 @@
 
         <el-form-item prop="stopAt" class="project-form-inline" label="结束时间"  :label-width="formLabelWidth">
           <el-date-picker
-            type="date"
+            type="datetime"
             v-model="projectForm.stopAt"
             value-format="timestamp"
             placeholder="选择日期">
