@@ -66,7 +66,8 @@ export default {
       let i1 = QRCode.toDataURL(res.ethCold, {width: 200});
       let i2 = QRCode.toDataURL(res.ethHot, {width: 200});
       let i3 = QRCode.toDataURL(res.usdtCold, {width: 200});
-      Promise.all([i1, i2, i3]).then((result) => {
+      let i4 = QRCode.toDataURL(res.usdtHot, {width: 200});
+      Promise.all([i1, i2, i3, i4]).then((result) => {
         this.tokenAddr = result;
       })
     }).catch()
