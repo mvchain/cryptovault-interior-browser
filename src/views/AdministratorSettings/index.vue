@@ -153,7 +153,7 @@
           ]
         },
         pwdForm: {
-          id: '',
+          userId: '',
           password: '',
           newPassword: ''
         },
@@ -182,7 +182,7 @@
     },
     methods: {
       editManage(obj) {
-        this.pwdForm.id = obj.id;
+        this.pwdForm.userId = obj.id;
         this.dialogFormVisible = true;
         this.dialogTitle = false;
         this.$store.dispatch('getAdminInfoEdit', `/${obj.id}`).then((data) => {

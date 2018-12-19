@@ -29,7 +29,7 @@ export function deleteAdmin(data) {
 }
 export function adminPwd(opt) {
   return request({
-    url: `/admin/${opt.id}/password`,
+    url: `/admin/${opt.userId}/password`,
     method: 'put',
     data: opt
   })
