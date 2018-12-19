@@ -72,7 +72,7 @@
         <el-form-item v-if="adminType === '0'" class="admin-form-item" label="交易控制："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[4].status"></el-switch>
         </el-form-item>
-        <el-form-item v-if="adminType === '0'" class="admin-form-item" label="禁用："  :label-width="formLabelWidth">
+        <el-form-item v-if="adminType === '0'" class="admin-form-item" label="启用："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.status"></el-switch>
         </el-form-item>
       </el-form>
@@ -92,7 +92,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="modifyFlag = false">取 消</el-button>
-        <el-button :loading="subFlag" type="primary" @click="subPwdForm('pwdForm')">确 定</el-button>
+        <el-button :loading="pwdFlag" type="primary" @click="subPwdForm('pwdForm')">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -232,6 +232,7 @@
           if (valid) {
             this.$store.dispatch('putModifyPwd', this.pwdForm).then(() => {
               this.pwdFlag = false;
+              this.modifyFlag = false;
               this.$refs[form].resetFields();
               this.$message.success('修改成功')
             }).catch(() => {

@@ -45,20 +45,6 @@
       this.createCode()
     },
     data() {
-      const validateUsername = (rule, value, callback) => {
-        if (!value) {
-          callback(new Error('请输入正确的用户名'))
-        } else {
-          callback()
-        }
-      }
-      const validatePass = (rule, value, callback) => {
-        if (value.length < 5) {
-          callback(new Error('密码不能小于5位'))
-        } else {
-          callback()
-        }
-      }
       return {
         loginForm: {
           username: 'admin',
@@ -67,8 +53,8 @@
         },
         verificationImg: '',
         loginRules: {
-          username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-          password: [{ required: true, trigger: 'blur', validator: validatePass }],
+          username: [{ required: true, trigger: 'blur', message: '请输入用户名'  }],
+          password: [{ required: true, trigger: 'blur', message: '请输入用户密码'  }],
           valiCode: [{ required: true, trigger: 'blur', message: '请输入验证码' }]
         },
         loading: false,
