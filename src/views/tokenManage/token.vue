@@ -191,7 +191,7 @@
         <el-form-item prop="priceBase" label="价格波动交易金额" :label-width="parameterWidth" >
           <el-input v-model="transactionForm.priceBase" class="parameter-input"></el-input>
         </el-form-item>
-        <el-form-item prop="nextPrice" label="下个基准价格" :label-width="parameterWidth" >
+        <el-form-item label="下个基准价格" :label-width="parameterWidth" >
           <el-input v-model="transactionForm.nextPrice" class="parameter-input"></el-input>
         </el-form-item>
         <el-form-item label="是否交易" :label-width="parameterWidth" >
