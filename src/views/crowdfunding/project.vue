@@ -113,6 +113,14 @@
             placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
+        <el-form-item prop="publishAt" class="project-form-inline" label="发币时间"  :label-width="formLabelWidth">
+          <el-date-picker
+            type="datetime"
+            v-model="projectForm.publishAt"
+            value-format="timestamp"
+            placeholder="选择日期">
+          </el-date-picker>
+        </el-form-item>
         <el-form-item prop="releaseValue" class="project-form-item" label="每日释放比例"  :label-width="formLabelWidth">
           <el-input v-model="projectForm.releaseValue"></el-input>
         </el-form-item>
@@ -146,6 +154,15 @@
       'pro-oss': oss
     },
     data() {
+      const publishVali = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请选择发币时间'));
+        } else if (value <= this.projectForm.stopAt) {
+          callback(new Error('发币时间应晚于项目结束时间'));
+        } else {
+          callback();
+        }
+      };
       return {
         formLabelWidth: '110px',
         projectForm: {
@@ -161,6 +178,7 @@
           ratio: '',
           releaseValue: '',
           startedAt: '',
+          publishAt: '',
           stopAt: '',
           visiable: ''
         },
@@ -191,7 +209,10 @@
           ],
           releaseValue: [
             { required: true, message: '请输入释放比例', trigger: 'blur' }
-          ]
+          ],
+          publishAt: [
+            { required: true, validator: publishVali, trigger: 'blur' }
+          ],
         },
         dialogFlag: false,
         createFlag: false,
