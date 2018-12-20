@@ -236,7 +236,8 @@
               this.$refs[form].resetFields();
               this.$message.success('修改成功')
             }).catch(() => {
-              this.subFlag = false
+              this.subFlag = false;
+              this.pwdFlag = false;
             })
           } else {
             this.pwdFlag = false;
