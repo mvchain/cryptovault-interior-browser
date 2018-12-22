@@ -86,9 +86,9 @@
                 <el-dropdown-item :command="{id: scope.row.id, status: 2}">拒绝</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <el-dropdown v-else-if="scope.row.transactionStatus === 2 && (permission.includes('1')) " @command="handleCommand" :disabled="true">
+            <el-dropdown v-else-if="(scope.row.transactionStatus === 2 || scope.row.transactionStatus === 6) && (permission.includes('1')) " @command="handleCommand" :disabled="true">
              <span class="el-dropdown-link" :title="scope.row.errorData">
-                待签名{{scope.row.errorMsg}}<i class="el-icon-arrow-down el-icon--right"></i>
+                {{scope.row.transactionStatus === 2 ? '待签名' : '失败'}}{{scope.row.errorMsg}}<i class="el-icon-arrow-down el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item  :command="{id: scope.row.id, status: 2}">拒绝</el-dropdown-item>
