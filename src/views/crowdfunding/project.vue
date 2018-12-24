@@ -74,12 +74,6 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item prop="projectMin" class="project-form-item" label="最小购买量"  :label-width="formLabelWidth">
-          <el-input v-model="projectForm.projectMin"></el-input>
-        </el-form-item>
-        <el-form-item prop="projectLimit" class="project-form-item" label="最大购买量"  :label-width="formLabelWidth">
-          <el-input v-model="projectForm.projectLimit"></el-input>
-        </el-form-item>
         <el-form-item prop="baseTokenId" class="project-form-item" label="接受币种"  :label-width="formLabelWidth">
           <el-select @change="baseTokenNameHandler" v-model="projectForm.baseTokenId" placeholder="请选择">
             <el-option
@@ -89,6 +83,13 @@
               :value="item.id">
             </el-option>
           </el-select>
+        </el-form-item>
+        <el-form-item prop="projectLimit" class="project-form-item" label="最大购买量"  :label-width="formLabelWidth">
+          <el-input v-model="projectForm.projectLimit"></el-input>
+        </el-form-item>
+
+        <el-form-item prop="projectMin" class="project-form-item" label="最小购买量"  :label-width="formLabelWidth">
+          <el-input v-model="projectForm.projectMin"></el-input>
         </el-form-item>
         <el-form-item prop="ratio" class="project-form-item" label="兑换比例"  :label-width="formLabelWidth">
           <el-input v-model="projectForm.ratio"></el-input>
@@ -155,9 +156,7 @@
     },
     data() {
       const publishVali = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请选择发币时间'));
-        } else if (value <= this.projectForm.stopAt) {
+        if (value <= this.projectForm.stopAt) {
           callback(new Error('发币时间应晚于项目结束时间'));
         } else {
           callback();
@@ -211,7 +210,7 @@
             { required: true, message: '请输入释放比例', trigger: 'blur' }
           ],
           publishAt: [
-            { required: true, validator: publishVali, trigger: 'blur' }
+            {validator: publishVali, trigger: 'blur' }
           ],
         },
         dialogFlag: false,
