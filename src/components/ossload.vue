@@ -3,13 +3,14 @@
   <el-upload
     :action="imgBase"
     :data="imgObj"
+    v-loading="loading"
     :show-file-list="false"
     :on-success="handleAvatarSuccess"
     :on-error="handleAvatarError"
     :before-upload="beforeAvatarUpload"
     list-type="picture">
-    <img v-if="imageUrl" :src="imageUrl"  @click="updateImg" class="avatar">
-    <i v-else class="el-icon-plus avatar-uploader-icon"  @click="updateImg"></i>
+    <img  v-if="imageUrl" :src="imageUrl"  @click="updateImg" class="avatar">
+    <i  v-else class="el-icon-plus avatar-uploader-icon"  @click="updateImg"></i>
   </el-upload>
 </template>
 <script type='text/ecmascript-6'>
@@ -36,6 +37,7 @@
     data() {
       return {
         imgBase: window.urlData.ossObj.host,
+        loading: false,
         imageUrl: '',
         ossObj: {},
         imgObj: {
@@ -107,11 +109,13 @@
       },
 
       handleAvatarSuccess(res, file) {
+        this.loading = false;
         this.imageUrl = this.imgBase + '/' + this.imgObj.key
         this.$emit('set-img-url', this.imageUrl)
       },
       beforeAvatarUpload(file) {
         let isJPG = false
+        this.loading = true;
         isJPG = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/jpg'
         const isLt2M = file.size / 1024 / 1024 < this.limit
         this.imgObj.key = this.calculate_object_name(file.name)
@@ -124,6 +128,7 @@
         return isJPG && isLt2M
       },
       handleAvatarError(err) {
+        this.loading = false;
         this.$message.error(err)
       }
     }
