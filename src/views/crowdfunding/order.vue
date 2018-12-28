@@ -133,7 +133,7 @@
     },
     methods: {
       orderData() {
-        this.$store.dispatch('getProjectOrderList', `?cellphone=${this.cellphone}&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&pageNum=${this.pageNum}&pageSize=20&projectName=${this.projectName}&status=${this.orderStatus}`)
+        this.$store.dispatch('getProjectOrderList', `?cellphone=${this.cellphone}&orderBy=created_at desc&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&pageNum=${this.pageNum}&pageSize=20&projectName=${this.projectName}&status=${this.orderStatus}`)
       },
       searchHandler() {
         if(!(/^1[345789]\d{9}$/.test(this.searchText))){

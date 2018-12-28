@@ -136,7 +136,7 @@
     },
     methods: {
       overData() {
-        this.$store.dispatch('getOverList', `?cellphone=${this.cellphone}&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&orderNumber=${this.orderNumber}&pageNum=${this.pageNum}&pageSize=20&pairId=${this.pairStatus}&transactionType=${this.typeStatus}`)
+        this.$store.dispatch('getOverList', `?cellphone=${this.cellphone}&orderBy=created_at desc&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&orderNumber=${this.orderNumber}&pageNum=${this.pageNum}&pageSize=20&pairId=${this.pairStatus}&transactionType=${this.typeStatus}`)
       },
       searchHandler() {
         if(!(/^1[345789]\d{9}$/.test(this.searchText))){

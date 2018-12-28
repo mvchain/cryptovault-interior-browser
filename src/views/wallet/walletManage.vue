@@ -2,10 +2,41 @@
   <div class="wallet-manage">
     <div class="wallet-title">
       <import-component v-if="adminType === '0'" :action="action" :labelTxt="'导入地址'"></import-component>
-      <span>USDT地址库存：{{addrList.usdtAddressCount}}</span>
-      <span>ETH地址库存：{{addrList.ethAddressCount}}</span>
+      <el-button @click="summaryFun" style="margin-right:20px;">汇总导出</el-button>
+      <import-component :action="action1" :labelTxt="'签名文件导入'"></import-component>
     </div>
+    <div class="token-item"></div>
     <el-row :gutter="20" class="wallet-card">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
+        <div class="wallet-card-item-summary">
+          <p>USDT待汇总金额：</p>
+          <p>USDT地址剩余库存：{{addrList.usdtAddressCount}}</p>
+        </div>
+        <div class="wallet-card-item-img">
+          <img :src="tokenAddr[0]">
+        </div>
+        <div class="wallet-card-item-info">
+          <h3>USDT冷钱包地址</h3>
+          <p>地址余额：</p>
+          <p>{{addrList.usdtCold}}</p>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
+        <div class="wallet-card-item-summary">
+          <p>USDT待汇总金额：</p>
+          <p>USDT地址剩余库存：</p>
+        </div>
+        <div class="wallet-card-item-img">
+          <img :src="tokenAddr[0]">
+        </div>
+        <div class="wallet-card-item-info">
+          <h3>USDT热钱包地址</h3>
+          <p>地址余额：</p>
+          <p>{{addrList.usdtHot}}</p>
+        </div>
+      </el-col>
+    </el-row>
+    <!--<el-row :gutter="20" class="wallet-card">
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
         <div><img :src="tokenAddr[0]" alt=""></div>
         <h3>ETH冷钱包地址</h3>
@@ -34,7 +65,7 @@
           <span target="_blank" >{{addrList.usdtHot}}</span>
         </p>
       </el-col>
-    </el-row>
+    </el-row>-->
   </div>
 </template>
 
@@ -58,6 +89,8 @@ export default {
       tokenAddr: [],
       addrList: {},
       action: window.urlData.url + '/block/account/import',
+      action1: window.urlData.url + '/block/sign/import',
+      exportFlag: false,
     }
   },
   mounted() {
@@ -72,7 +105,17 @@ export default {
       })
     }).catch()
   },
-  methods: {}
+  methods: {
+    summaryFun() {
+      this.exportFlag = true;
+      this.$store.dispatch('getSign').then((s) => {
+        window.open(`${window.urlData.url}/block/collect/export?sign=${s}`)
+        this.exportFlag = false
+      }).catch(() => {
+        this.exportFlag = false
+      })
+    },
+  }
 }
 </script>
 
@@ -81,14 +124,21 @@ export default {
     padding: 20px;
     .wallet-card {
       .wallet-card-item {
-        text-align: center;
-        & h3 {
-          font-size: 16px;
-          font-weight: 900;
+        & .wallet-card-item-summary {
+          line-height: 30px;
+          text-indent: 21px;
         }
-        & p {
-          font-size: 16px;
-          margin-top: 10px;
+        & .wallet-card-item-img {
+          float:left;
+        }
+        & .wallet-card-item-info {
+          float:left;
+          & h3{
+            margin:80px 0 20px 0;
+          }
+          & p{
+            margin-top:20px;
+          }
         }
       }
     }
