@@ -34,8 +34,10 @@
         label="总资产">
       </el-table-column>
       <el-table-column
-        prop="status"
         label="状态">
+        <template slot-scope="scope">
+          {{scope.row.status === 1 ? '启用' : '禁用'}}
+        </template>
       </el-table-column>
       <el-table-column
         with="600"
