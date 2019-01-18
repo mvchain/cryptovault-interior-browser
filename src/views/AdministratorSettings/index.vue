@@ -26,7 +26,6 @@
           </template>
         </el-table-column>
         <el-table-column
-          with="600"
           label="操作">
           <template slot-scope="scope">
             <el-button @click="editManage(scope.row)" size="small">编辑</el-button>
@@ -56,6 +55,9 @@
         </el-form-item>
         <el-form-item v-else="!dialogTitle" label="登录密码：" :label-width="formLabelWidth" >
           <el-button size="small" @click="modifyFlag = true">修改</el-button>
+        </el-form-item>
+        <el-form-item v-if="adminType === '0'" class="admin-form-item"  label="理财控制："  :label-width="formLabelWidth">
+          <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[5].status"></el-switch>
         </el-form-item>
         <el-form-item v-if="adminType === '0'" class="admin-form-item"  label="充提控制："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[0].status"></el-switch>
@@ -135,6 +137,10 @@
             },
             {
               permissionId: 5,
+              status: 0
+            },
+            {
+              permissionId: 6,
               status: 0
             }
           ],

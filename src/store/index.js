@@ -8,6 +8,7 @@ import block from './modules/block'
 import user from './modules/user'
 import token from './modules/token'
 import transaction from './modules/transaction'
+import financal from './modules/financal'
 import getters from './getters'
 
 Vue.use(Vuex)
@@ -21,7 +22,8 @@ const store = new Vuex.Store({
     project,
     block,
     token,
-    transaction
+    transaction,
+    financal
   },
   getters
 })

@@ -5,67 +5,79 @@
       <el-button @click="summaryFun" style="margin-right:20px;">汇总导出</el-button>
       <import-component :action="action1" :labelTxt="'签名文件导入'"></import-component>
     </div>
-    <div class="token-item"></div>
+    <div class="token-item">
+      <div class="wallet-card-item-summary">
+        <p>USDT待汇总金额：{{usdtAddr.waitBalance}}</p>
+        <p>USDT地址剩余库存：{{usdtAddr.count}}</p>
+      </div>
+    </div>
     <el-row :gutter="20" class="wallet-card">
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
-        <div class="wallet-card-item-summary">
-          <p>USDT待汇总金额：</p>
-          <p>USDT地址剩余库存：{{addrList.usdtAddressCount}}</p>
-        </div>
         <div class="wallet-card-item-img">
-          <img :src="tokenAddr[0]">
+          <img :src="tokenAddr.usdtColdImg" alt="">
         </div>
         <div class="wallet-card-item-info">
           <h3>USDT冷钱包地址</h3>
-          <p>地址余额：</p>
-          <p>{{addrList.usdtCold}}</p>
+          <p>地址余额：{{usdtAddr.coldBalance}}</p>
+          <p>{{usdtAddr.coldAddress}}</p>
         </div>
       </el-col>
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
-        <div class="wallet-card-item-summary">
-          <p>USDT待汇总金额：</p>
-          <p>USDT地址剩余库存：</p>
-        </div>
         <div class="wallet-card-item-img">
-          <img :src="tokenAddr[0]">
+          <img :src="tokenAddr.usdtHotImg" alt="">
         </div>
         <div class="wallet-card-item-info">
           <h3>USDT热钱包地址</h3>
-          <p>地址余额：</p>
-          <p>{{addrList.usdtHot}}</p>
+          <p>地址余额：{{usdtAddr.hotBalance}}</p>
+          <p>{{usdtAddr.hotAddress}}</p>
         </div>
       </el-col>
     </el-row>
-    <!--<el-row :gutter="20" class="wallet-card">
-      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
-        <div><img :src="tokenAddr[0]" alt=""></div>
-        <h3>ETH冷钱包地址</h3>
+
+
+
+
+    <div class="token-item" style="margin-top:40px;">
+      <div class="wallet-card-item-summary">
         <p>
-          <a target="_blank" :href="`https://etherscan.io/address/${addrList.ethCold}`">{{addrList.ethCold}}</a>
+          <span>{{ethAddr.tokenName}}待汇总金额：{{ethAddr.waitBalance}}</span>
         </p>
+        <p>
+          <span>{{ethAddr.tokenName}}地址剩余库存：{{ethAddr.count}}</span>
+          <el-select size="small" @change="changeHandler" v-model="tokenId" placeholder="请选择">
+            <el-option
+              v-for="item in tokenList"
+              v-if="item.contractAddress || item.tokenId === 3"
+              :key="item.tokenId"
+              :label="item.tokenName"
+              :value="item.tokenId">
+            </el-option>
+          </el-select>
+        </p>
+      </div>
+    </div>
+    <el-row :gutter="20" class="wallet-card">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
+        <div class="wallet-card-item-img">
+          <img :src="tokenAddr.ethColdImg" alt="">
+        </div>
+        <div class="wallet-card-item-info">
+          <h3>{{ethAddr.tokenName}}冷钱包地址</h3>
+          <p>地址余额：{{ethAddr.coldBalance}}</p>
+          <p>{{ethAddr.coldAddress}}</p>
+        </div>
       </el-col>
       <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
-        <div><img :src="tokenAddr[1]" alt=""></div>
-        <h3>ETH热钱包</h3>
-        <p>
-          <a target="_blank" :href="`https://etherscan.io/address/${addrList.ethHot}`">{{addrList.ethHot}}</a>
-        </p>
+        <div class="wallet-card-item-img">
+          <img :src="tokenAddr.ethHotImg" alt="">
+        </div>
+        <div class="wallet-card-item-info">
+          <h3>{{ethAddr.tokenName}}热钱包地址</h3>
+          <p>地址余额：{{ethAddr.hotBalance}}</p>
+          <p>{{ethAddr.hotAddress}}</p>
+        </div>
       </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
-        <div><img :src="tokenAddr[2]" alt=""></div>
-        <h3>USDT冷钱包地址</h3>
-        <p>
-          <span target="_blank" >{{addrList.usdtCold}}</span>
-        </p>
-      </el-col>
-      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
-        <div><img :src="tokenAddr[2]" alt=""></div>
-        <h3>USDT热钱包地址</h3>
-        <p>
-          <span target="_blank" >{{addrList.usdtHot}}</span>
-        </p>
-      </el-col>
-    </el-row>-->
+    </el-row>
   </div>
 </template>
 
@@ -81,28 +93,44 @@ export default {
   },
   computed: {
     ...mapGetters({
-      adminType: 'adminType'
+      adminType: 'adminType',
+      tokenList: 'tokenList',
     })
   },
   data() {
     return {
-      tokenAddr: [],
-      addrList: {},
+      tokenAddr: {
+        usdtColdImg: '',
+        usdtHotImg: '',
+        ethColdImg: '',
+        ethHotImg: '',
+      },
+      usdtAddr: {},
+      ethAddr: {},
       action: window.urlData.url + '/block/account/import',
       action1: window.urlData.url + '/block/sign/import',
       exportFlag: false,
+      tokenId: 3
     }
   },
-  mounted() {
-    this.$store.dispatch('getAddrInfo').then((res) => {
-      this.addrList = res;
-      let i1 = QRCode.toDataURL(res.ethCold, {width: 200});
-      let i2 = QRCode.toDataURL(res.ethHot, {width: 200});
-      let i3 = QRCode.toDataURL(res.usdtCold, {width: 200});
-      let i4 = QRCode.toDataURL(res.usdtHot, {width: 200});
-      Promise.all([i1, i2, i3, i4]).then((result) => {
-        this.tokenAddr = result;
-      })
+  beforeMount() {
+    this.$store.dispatch('getAddrInfo', 4).then((res) => {
+      this.usdtAddr = res;
+      let code = QRCode.toDataURL(res.coldAddress, {width:200});
+      let hot = QRCode.toDataURL(res.hotAddress, {width:200});
+      Promise.all([code, hot]).then((res) => {
+        this.tokenAddr.usdtColdImg = res[0];
+        this.tokenAddr.usdtHotImg = res[1];
+      });
+    }).catch()
+    this.$store.dispatch('getAddrInfo', 3).then((res) => {
+      this.ethAddr = res;
+      let code = QRCode.toDataURL(res.coldAddress, {width:200});
+      let hot = QRCode.toDataURL(res.hotAddress, {width:200});
+      Promise.all([code, hot]).then((res) => {
+        this.tokenAddr.ethColdImg = res[0];
+        this.tokenAddr.ethHotImg = res[1];
+      });
     }).catch()
   },
   methods: {
@@ -115,6 +143,17 @@ export default {
         this.exportFlag = false
       })
     },
+    changeHandler(v) {
+      this.$store.dispatch('getAddrInfo', v).then((res) => {
+        this.ethAddr = res;
+        let code = QRCode.toDataURL(res.coldAddress, {width:200});
+        let hot = QRCode.toDataURL(res.hotAddress, {width:200});
+        Promise.all([code, hot]).then((res) => {
+          this.tokenAddr.ethColdImg = res[0];
+          this.tokenAddr.ethtHotImg = res[1];
+        });
+      }).catch()
+    }
   }
 }
 </script>
@@ -124,12 +163,12 @@ export default {
     padding: 20px;
     .wallet-card {
       .wallet-card-item {
-        & .wallet-card-item-summary {
-          line-height: 30px;
-          text-indent: 21px;
-        }
+        margin-top:20px;
         & .wallet-card-item-img {
           float:left;
+          width:200px;
+          height:200px;
+          margin-right:20px;
         }
         & .wallet-card-item-info {
           float:left;
@@ -147,6 +186,11 @@ export default {
       & span {
         padding-right: 30px;
         font-size: 18px;
+      }
+    }
+    .token-item{
+      & .wallet-card-item-summary {
+        line-height: 30px;
       }
     }
   }

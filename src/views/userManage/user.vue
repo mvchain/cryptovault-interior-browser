@@ -22,8 +22,8 @@
       border
       style="width: 100%">
       <el-table-column
-        prop="cellphone"
-        label="手机号">
+        prop="email"
+        label="邮箱">
       </el-table-column>
       <el-table-column
         prop="nickname"
@@ -34,18 +34,26 @@
         label="总资产">
       </el-table-column>
       <el-table-column
+        prop="financialBalance"
+        label="理财资产">
+      </el-table-column>
+      <el-table-column
+        prop="inviteNum"
+        label="邀请人数">
+      </el-table-column>
+      <el-table-column
         label="状态">
         <template slot-scope="scope">
           {{scope.row.status === 1 ? '启用' : '禁用'}}
         </template>
       </el-table-column>
       <el-table-column
-        with="600"
+        width="300"
         label="操作">
         <template slot-scope="scope">
           <el-button @click="$router.push({path: 'assets', query: {id: scope.row.id, nickname: scope.row.nickname, cellphone: scope.row.cellphone}})" size="small">资产列表</el-button>
           <el-button @click="$router.push({path: 'operating', query: {id: scope.row.id, nickname: scope.row.nickname, cellphone: scope.row.cellphone}})" size="small">操作记录</el-button>
-          <el-button @click="enableDisable({id: scope.row.id, status: scope.row.status})" v-if="permission.includes('2')">{{scope.row.status === 1 ? '禁用' : '启用'}}</el-button>
+          <el-button @click="enableDisable({id: scope.row.id, status: scope.row.status})" v-if="permission.includes('2')" size="small">{{scope.row.status === 1 ? '禁用' : '启用'}}</el-button>
         </template>
       </el-table-column>
     </el-table>

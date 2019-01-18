@@ -25,9 +25,9 @@ export function blockTx(data) {
     method: 'get',
   })
 }
-export function addrInfo() {
+export function addrInfo(id) {
   return request({
-    url: '/block/wallet',
+    url: '/block/wallet/' + id,
     method: 'get',
   })
 }

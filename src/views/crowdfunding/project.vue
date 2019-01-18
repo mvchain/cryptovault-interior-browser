@@ -65,7 +65,7 @@
           <el-input v-model="projectForm.projectName"></el-input>
         </el-form-item>
         <el-form-item prop="tokenId" class="project-form-item"  label="对应币种"  :label-width="formLabelWidth">
-          <el-select v-model="projectForm.tokenId" placeholder="请选择">
+          <el-select @change="baseTokenNameHandler" v-model="projectForm.tokenId" placeholder="请选择">
             <el-option
               v-for="item in tokenList"
               :key="item.tokenId"
@@ -75,12 +75,12 @@
           </el-select>
         </el-form-item>
         <el-form-item prop="baseTokenId" class="project-form-item" label="接受币种"  :label-width="formLabelWidth">
-          <el-select @change="baseTokenNameHandler" v-model="projectForm.baseTokenId" placeholder="请选择">
+          <el-select  v-model="projectForm.baseTokenId" placeholder="请选择">
             <el-option
-              v-for="item in receiveList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.id">
+              v-for="item in tokenList"
+              :key="item.tokenId"
+              :label="item.tokenName"
+              :value="item.tokenId">
             </el-option>
           </el-select>
         </el-form-item>
@@ -216,7 +216,7 @@
         dialogFlag: false,
         createFlag: false,
         subFlag: false,
-        receiveList: [
+       /* receiveList: [
           {
             id: 1,
             name: 'VRT交易'
@@ -225,7 +225,7 @@
             id: 2,
             name: '余额交易'
           }
-        ],
+        ],*/
         pageNum: 1,
         imgName: '',
         copyForm: {}
@@ -234,7 +234,6 @@
     mounted() {
       this.projectData()
       this.copyForm = Object.assign({}, this.projectForm);
-      this.$store.dispatch('getTokenList', '?tokenName=');
     },
     methods: {
       getImg(v) {
@@ -282,14 +281,14 @@
         }).catch(() => { return false })
       },
       baseTokenNameHandler(v) {
-        this.receiveList.map((obj) => {
-          if (v === obj.id) {
-            this.projectForm.baseTokenName = obj.name
+        this.tokenList.map((obj) => {
+          if (v === obj.tokenId) {
+            this.projectForm.baseTokenName = obj.tokenName
           }
         })
       },
       projectData() {
-        this.$store.dispatch('getProjectList', `?pageNum=${this.pageNum}&pageSize=20`)
+        this.$store.dispatch('getProjectList', `?pageNum=${this.pageNum}&pageSize=20&orderBy=created_at desc`)
       },
       handleCurrentChange(v) {
         this.pageNum = v;

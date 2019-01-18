@@ -137,7 +137,7 @@ export const constantRouterMap = [
   {
     path: '/transaction',
     component: Layout,
-    redirect: '/transaction/rechargeData',
+    redirect: '/transaction/pending',
     name: 'dataStatistics',
     meta: { title: '交易管理', icon: 'list' },
     children: [
@@ -152,6 +152,28 @@ export const constantRouterMap = [
         name: 'carryOut',
         component: _import('transaction/carryOut'),
         meta: { title: '成交记录', icon: 'list' }
+      }
+    ]
+  },
+  {
+    path: '/financial',
+    component: Layout,
+    redirect: '/financial/financialManage',
+    name: 'Financial',
+    meta: { title: '理财', icon: 'wallet' },
+    children: [
+      {
+        path: 'financialManage',
+        name: 'financialManage',
+        component: _import('financial/financial'),
+        meta: { title: '理财管理', icon: 'wallet' }
+      },
+      {
+        path: 'financialOrder',
+        name: 'financialOrder',
+        hidden: true,
+        component: _import('financial/financialOrder'),
+        meta: { title: '理财订单', icon: 'wallet' }
       }
     ]
   },
@@ -172,7 +194,13 @@ export const constantRouterMap = [
         name: 'walletWithdraw',
         component: _import('wallet/walletWithdraw'),
         meta: { title: '钱包提币', icon: 'wallet' }
-      }
+      },
+      /*{
+        path: 'walletSummary',
+        name: 'walletSummary',
+        component: _import('wallet/walletSummary'),
+        meta: { title: '钱包汇总', icon: 'wallet' }
+      }*/
     ]
   },
 

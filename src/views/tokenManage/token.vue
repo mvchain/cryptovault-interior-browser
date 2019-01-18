@@ -11,7 +11,7 @@
       </el-col>
     </el-row>
     <el-table
-      :data="tokenList"
+      :data="onlyBlockToken"
       border
       style="width: 100%">
       <el-table-column
@@ -133,20 +133,19 @@
           </el-slider>
         </el-form-item>
 
-
-        <el-form-item  class="parameter-label-item"  label="VRT交易区" :label-width="parameterWidth" >
-          <el-switch :active-value="1" :inactive-value="0" v-model="parameterForm.vrt" ></el-switch>
-        </el-form-item>
-        <el-form-item  class="parameter-label-item"  label="余额交易区" :label-width="parameterWidth" >
+        <!--<el-form-item  class="parameter-label-item"  label="余额交易区" :label-width="parameterWidth" >
           <el-switch :active-value="1" :inactive-value="0" v-model="parameterForm.balance" ></el-switch>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item  class="parameter-label-item" label="提币" :label-width="parameterWidth" >
           <el-switch :disabled="parameterForm.inner === 1" :active-value="1" :inactive-value="0" v-model="parameterForm.withdraw" ></el-switch>
         </el-form-item>
         <el-form-item  class="parameter-label-item" label="充币" :label-width="parameterWidth" >
           <el-switch :disabled="parameterForm.inner === 1" :active-value="1" :inactive-value="0" v-model="parameterForm.recharge" ></el-switch>
         </el-form-item>
-        <el-form-item label="前端展示" :label-width="parameterWidth" >
+        <el-form-item  class="parameter-label-item"  label="VRT交易区" :label-width="parameterWidth" >
+          <el-switch :active-value="1" :inactive-value="0" v-model="parameterForm.vrt" ></el-switch>
+        </el-form-item>
+        <el-form-item class="parameter-label-item" label="前端展示" :label-width="parameterWidth" >
           <el-switch :active-value="1" :inactive-value="0" v-model="parameterForm.visible"></el-switch>
         </el-form-item>
       </el-form>
@@ -391,11 +390,11 @@
         },
         imgName: '',
         dialogCopy: {},
+        onlyBlockToken: []
       }
     },
     computed: {
       ...mapGetters({
-        tokenList: 'tokenList',
         permission: 'permission',
         adminType: 'adminType'
       })
@@ -421,7 +420,9 @@
         this.tokenForm.tokenImage = v;
       },
       tokenData() {
-        this.$store.dispatch('getTokenList', `?tokenName=${this.searchText}`)
+        this.$store.dispatch('getOnlyBlockTokenList', `?tokenName=${this.searchText}`).then((res) => {
+          this.onlyBlockToken = res
+        }).catch()
       },
       subTokenForm(form) {
         this.subFlag = true;

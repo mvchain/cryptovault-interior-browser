@@ -14,6 +14,10 @@
           label="币种">
         </el-table-column>
         <el-table-column
+          prop="tokenName"
+          label="钱包地址">
+        </el-table-column>
+        <el-table-column
           prop="value"
           label="数量">
         </el-table-column>

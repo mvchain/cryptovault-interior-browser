@@ -22,6 +22,9 @@ const getters = {
   tokenPairList: state => state.token.tokenPairList,
 
   txList: state => state.transaction.txList,
-  overList: state => state.transaction.overList
+  overList: state => state.transaction.overList,
+
+  financialList: state => state.financal.financialList,
+  financialOrder: state => state.financal.financialOrder
 }
 export default getters

@@ -23,6 +23,15 @@ const token = {
         })
       })
     },
+    getOnlyBlockTokenList({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        tokenList(payload).then((res) => {
+          resolve(res.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     getTokenInfo({commit, state}, payload) {
       return new Promise((resolve, reject) => {
         tokenList(payload).then((res) => {

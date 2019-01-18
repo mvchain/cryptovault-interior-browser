@@ -54,6 +54,7 @@
             <el-select v-model="withdrawForm.tokenId" placeholder="请选择">
               <el-option
                 v-for="item in tokenList"
+                v-if="item.contractAddress || item.tokenId === 3 || item.tokenId === 4"
                 :key="item.tokenId"
                 :label="item.tokenName"
                 :value="item.tokenId">
@@ -89,7 +90,7 @@
         blockTxList: 'blockTxList',
         permission: 'permission',
         adminType: 'adminType',
-        tokenList: 'tokenList',
+        tokenList: 'tokenList'
       }),
     },
     components: {
@@ -125,12 +126,11 @@
           password: [
             { required: true, message: '请输入主管理员密码', trigger: 'blur' }
           ]
-        }
+        },
       }
     },
     mounted() {
       this.withdrawData()
-      this.$store.dispatch('getTokenList', `?isBlock=0&tokenName=`)
     },
     methods: {
       exportsSign() {
