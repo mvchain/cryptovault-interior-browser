@@ -165,7 +165,7 @@
       </div>
     </el-dialog>
     <el-dialog :show-close="false" :visible="depthDialog" center >
-      <el-input  type="number" max="20" min="0" placeholder="请输入内容" v-model="financialForm.depth">
+      <el-input  type="number" max="20" min="0" placeholder="请输入内容" v-model.name="financialForm.depth">
         <template slot="prepend">提升层级：</template>
       </el-input>
       <div slot="footer" class="dialog-footer">
@@ -175,6 +175,7 @@
       <el-table
         :data="financialForm.details"
         border
+        height="500"
         style="margin-top:20px;width: 100%;height:500px; overflow-y: auto;">
         <el-table-column
           prop="depth"
@@ -183,7 +184,7 @@
         <el-table-column
           label="提成比例">
           <template slot-scope="scope">
-            <el-input style="width:100px;" type="number" v-model="financialForm.details[scope.$index].ratio"></el-input> %
+            <el-input style="width:100px;" type="number" min="0" max="100" v-model="financialForm.details[scope.$index].ratio"></el-input> %
           </template>
         </el-table-column>
       </el-table>
@@ -290,9 +291,10 @@
     watch: {
       'financialForm.depth': {
         handler(n,o) {
+          n = Number(n);
+          o = Number(o);
           if (!this.depthDialog && !this.dialogTitle) return;
-
-          if (Number(n)>20 || Number(n) <= 0) {
+          if (n > 20 || n <= 0) {
             this.financialForm.depth = '';
             this.financialForm.details = [];
             this.depthFlag = false;
@@ -306,7 +308,7 @@
           if (n-o > 0) {
             this.financialForm.details.unshift(...this.addDepthItem(o, n))
           } else if (n-o < 0) {
-            this.financialForm.details.splice(0,-(n-o))
+            this.financialForm.details.splice(0,o-n)
           }
 
         }
@@ -382,7 +384,7 @@
         let l = [];
         for (let i = n; i < m; i++) {
           l.unshift({
-            depth: Number(i)+1,
+            depth: i + 1,
             ratio: 0,
           });
         }
@@ -420,5 +422,6 @@
     .financial-icon-err{
       color:red;
     }
+
   }
 </style>
