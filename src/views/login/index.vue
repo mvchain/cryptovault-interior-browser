@@ -37,7 +37,7 @@
 </template>
 
 <script>
-  // import md5 from 'blueimp-md5'
+  import md5 from 'blueimp-md5'
 
   export default {
     name: 'login',
@@ -75,16 +75,19 @@
       handleLogin() {
         this.$refs.loginForm.validate(valid => {
           if (valid) {
-            this.loading = true
-            this.$store.dispatch('Login', this.loginForm).then(() => {
-              this.loading = false
+            this.loading = true;
+            let copyForm = Object.assign({}, this.loginForm);
+            copyForm.password = md5(md5(copyForm.password) + copyForm.username);
+
+            this.$store.dispatch('Login', copyForm).then(() => {
+              this.loading = false;
               this.$router.push({ path: '/' })
             }).catch(() => {
-              this.loading = false
+              this.loading = false;
               this.createCode()
             })
           } else {
-            this.$message.error('请正确填写表单')
+            this.$message.error('请正确填写表单');
             return false
           }
         })

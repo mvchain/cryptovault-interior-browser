@@ -339,7 +339,6 @@
           this.depthFlag = true;
         }).catch();
       },
-      orderManage() {},
       projectData() {
         this.$store.dispatch('getFinancialList', `?financialName=${this.searchText}&orderBy=created_at desc&pageNum=${this.pageNum}&pageSize=20`);
       },

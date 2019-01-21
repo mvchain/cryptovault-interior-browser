@@ -102,6 +102,7 @@
 
 <script>
   import {mapGetters} from 'vuex'
+  import md5 from 'blueimp-md5'
   export default {
     name: 'AdministratorSettings',
     props: {
@@ -213,7 +214,9 @@
         this.subFlag = true;
         this.$refs[form].validate((valid) => {
           if (valid) {
-            this.$store.dispatch(this.dialogTitle ? 'postCreateAdmin' : 'putModifyAdmin', this.manageForm).then(() => {
+            let cyForm = Object.assign({}, this.manageForm);
+            cyForm.password = md5(md5(cyForm.password) + cyForm.username);
+            this.$store.dispatch(this.dialogTitle ? 'postCreateAdmin' : 'putModifyAdmin', cyForm).then(() => {
               this.subFlag = false;
               this.dialogFormVisible = false;
               this.$refs[form].resetFields();
@@ -234,9 +237,13 @@
       },
       subPwdForm(form) {
         this.pwdFlag = true;
+        let userInfo = JSON.parse(window.localStorage.getItem('user'));
         this.$refs[form].validate((valid) => {
           if (valid) {
-            this.$store.dispatch('putModifyPwd', this.pwdForm).then(() => {
+            let cyForm = Object.assign({}, this.pwdForm);
+            cyForm.password = md5(md5(cyForm.password) + userInfo.username);
+            cyForm.newPassword = md5(md5(cyForm.newPassword) + this.manageForm.username);
+            this.$store.dispatch('putModifyPwd', cyForm).then(() => {
               this.pwdFlag = false;
               this.modifyFlag = false;
               this.$refs[form].resetFields();
