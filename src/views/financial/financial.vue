@@ -60,7 +60,7 @@
         <el-table-column
           label="状态">
           <template slot-scope="scope">
-            {{scope.row.status === 1 ? '进行中' : '已结束'}}
+            {{scope.row.status === 2 ? '已结束' : '进行中'}}
           </template>
         </el-table-column>
         <el-table-column
