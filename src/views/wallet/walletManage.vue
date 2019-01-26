@@ -37,6 +37,37 @@
 
 
 
+
+    <div class="token-item">
+      <div class="wallet-card-item-summary">
+        <p>BTC待汇总金额：{{btcAddr.waitBalance}}</p>
+        <p>BTC地址剩余库存：{{btcAddr.count}}</p>
+      </div>
+    </div>
+    <el-row :gutter="20" class="wallet-card">
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
+        <div class="wallet-card-item-img">
+          <img :src="tokenAddr.btcColdImg" alt="">
+        </div>
+        <div class="wallet-card-item-info">
+          <h3>USDT冷钱包地址</h3>
+          <p>地址余额：{{btcAddr.coldBalance}}</p>
+          <p>{{btcAddr.coldAddress}}</p>
+        </div>
+      </el-col>
+      <el-col :xs="24" :sm="24" :md="12" :lg="12" :xl="12" class="wallet-card-item">
+        <div class="wallet-card-item-img">
+          <img :src="tokenAddr.btcHotImg" alt="">
+        </div>
+        <div class="wallet-card-item-info">
+          <h3>USDT热钱包地址</h3>
+          <p>地址余额：{{btcAddr.hotBalance}}</p>
+          <p>{{btcAddr.hotAddress}}</p>
+        </div>
+      </el-col>
+    </el-row>
+
+
     <div class="token-item" style="margin-top:40px;">
       <div class="wallet-card-item-summary">
         <p>
@@ -104,9 +135,12 @@ export default {
         usdtHotImg: '',
         ethColdImg: '',
         ethHotImg: '',
+        btcColdImg: '',
+        btcHotImg: '',
       },
       usdtAddr: {},
       ethAddr: {},
+      btcAddr: {},
       action: window.urlData.url + '/block/account/import',
       action1: window.urlData.url + '/block/sign/import',
       exportFlag: false,
@@ -130,6 +164,15 @@ export default {
       Promise.all([code, hot]).then((res) => {
         this.tokenAddr.ethColdImg = res[0];
         this.tokenAddr.ethHotImg = res[1];
+      });
+    }).catch()
+    this.$store.dispatch('getAddrInfo', 2).then((res) => {
+      this.btcAddr = res;
+      let code = QRCode.toDataURL(res.coldAddress, {width:200});
+      let hot = QRCode.toDataURL(res.hotAddress, {width:200});
+      Promise.all([code, hot]).then((res) => {
+        this.tokenAddr.btcColdImg = res[0];
+        this.tokenAddr.btcHotImg = res[1];
       });
     }).catch()
   },
