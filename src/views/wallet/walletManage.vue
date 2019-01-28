@@ -50,7 +50,7 @@
           <img :src="tokenAddr.btcColdImg" alt="">
         </div>
         <div class="wallet-card-item-info">
-          <h3>USDT冷钱包地址</h3>
+          <h3>BTC冷钱包地址</h3>
           <p>地址余额：{{btcAddr.coldBalance}}</p>
           <p>{{btcAddr.coldAddress}}</p>
         </div>
@@ -60,7 +60,7 @@
           <img :src="tokenAddr.btcHotImg" alt="">
         </div>
         <div class="wallet-card-item-info">
-          <h3>USDT热钱包地址</h3>
+          <h3>BTC热钱包地址</h3>
           <p>地址余额：{{btcAddr.hotBalance}}</p>
           <p>{{btcAddr.hotAddress}}</p>
         </div>
