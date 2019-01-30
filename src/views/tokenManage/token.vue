@@ -55,7 +55,7 @@
       <el-table-column
         label="开通交易对">
         <template slot-scope="scope">
-          {{scope.row.pairInfo === 0 ? '无':scope.row.pairInfo === 1 ? 'VRT交易' : scope.row.pairInfo === 2 ? '余额交易' : 'VRT交易、余额交易'}}
+          {{scope.row.pairInfo === 0 ? '无':scope.row.pairInfo === 1 ? 'BZTB交易' : scope.row.pairInfo === 2 ? '余额交易' : 'BZTB交易、余额交易'}}
         </template>
       </el-table-column>
       <el-table-column
@@ -102,15 +102,15 @@
     <el-dialog width="500px" :title="'参数设置'" :visible.sync="parameterDialog" center>
       <el-form :rules="parameterRules" :model="parameterForm" ref="parameterForm">
         <el-form-item  label="单笔提币上下线区间" :label-width="parameterWidth" >
-          <el-input :disabled="parameterForm.inner === 1" v-model="parameterForm.withdrawMin" class="parameter-input"></el-input>
+          <el-input  v-model="parameterForm.withdrawMin" class="parameter-input"></el-input>
           ——
-          <el-input :disabled="parameterForm.inner === 1" v-model="parameterForm.withdrawMax" class="parameter-input"></el-input>
+          <el-input  v-model="parameterForm.withdrawMax" class="parameter-input"></el-input>
         </el-form-item>
         <el-form-item label="每日提币上限" :label-width="parameterWidth" >
-          <el-input :disabled="parameterForm.inner === 1" v-model="parameterForm.withdrawDay" ></el-input>
+          <el-input  v-model="parameterForm.withdrawDay" ></el-input>
         </el-form-item>
         <el-form-item  :label-width="parameterWidth" >
-          <el-input :disabled="parameterForm.inner === 1" v-model="parameterForm.fee" ></el-input>
+          <el-input  v-model="parameterForm.fee" ></el-input>
         </el-form-item>
 
 
@@ -137,12 +137,12 @@
           <el-switch :active-value="1" :inactive-value="0" v-model="parameterForm.balance" ></el-switch>
         </el-form-item>-->
         <el-form-item  class="parameter-label-item" label="提币" :label-width="parameterWidth" >
-          <el-switch :disabled="parameterForm.inner === 1" :active-value="1" :inactive-value="0" v-model="parameterForm.withdraw" ></el-switch>
+          <el-switch  :active-value="1" :inactive-value="0" v-model="parameterForm.withdraw" ></el-switch>
         </el-form-item>
         <el-form-item  class="parameter-label-item" label="充币" :label-width="parameterWidth" >
-          <el-switch :disabled="parameterForm.inner === 1" :active-value="1" :inactive-value="0" v-model="parameterForm.recharge" ></el-switch>
+          <el-switch  :active-value="1" :inactive-value="0" v-model="parameterForm.recharge" ></el-switch>
         </el-form-item>
-        <el-form-item  class="parameter-label-item"  label="VRT交易区" :label-width="parameterWidth" >
+        <el-form-item  class="parameter-label-item"  label="BZTB交易区" :label-width="parameterWidth" >
           <el-switch :active-value="1" :inactive-value="0" v-model="parameterForm.vrt" ></el-switch>
         </el-form-item>
         <el-form-item class="parameter-label-item" label="前端展示" :label-width="parameterWidth" >
