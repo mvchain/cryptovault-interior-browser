@@ -2,7 +2,7 @@
   <div class="financial">
     <el-row style="margin-bottom:20px;">
       <el-col :span="18">
-        <el-button type="success" @click="dialogFormVisible = true; dialogTitle = true;" >新建项目</el-button>
+        <el-button  v-if="permission.includes('6')"  type="success" @click="dialogFormVisible = true; dialogTitle = true;" >新建项目</el-button>
       </el-col>
       <el-col :span="6">
         <el-input clearable placeholder="输入项目" v-model="searchText">
@@ -66,7 +66,7 @@
         <el-table-column
           label="操作">
           <template slot-scope="scope">
-            <el-button @click="editManage(scope.row.id)" size="small">编辑</el-button>
+            <el-button v-if="permission.includes('6')" @click="editManage(scope.row.id)" size="small">编辑</el-button>
             <el-button @click="$router.push({path: 'financialOrder', query: {id: scope.row.id}})" size="small" >订单</el-button>
           </template>
         </el-table-column>
@@ -286,6 +286,7 @@
       ...mapGetters({
         financialList: 'financialList',
         tokenList: 'tokenList',
+        permission: 'permission',
       })
     },
     watch: {
