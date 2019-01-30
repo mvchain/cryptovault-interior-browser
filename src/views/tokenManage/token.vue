@@ -117,18 +117,18 @@
         <el-form-item :label="parameterForm.id === 4 ? '交易手续费': 'GasPrice(Gwei)'" :label-width="parameterWidth" >
           <el-slider
             v-model="parameterForm.transaferFee"
-            :min="parameterForm.id === 4 ? feeObj.usdt.min : feeObj.eth.min"
-            :max="parameterForm.id === 4 ? feeObj.usdt.max : feeObj.eth.max"
-            :step="parameterForm.id === 4 ? feeObj.usdt.step : feeObj.eth.step"
+            :min="parameterForm.id === 4 || parameterForm.id === 2 ? feeObj.usdt.min : feeObj.eth.min"
+            :max="parameterForm.id === 4 || parameterForm.id === 2? feeObj.usdt.max : feeObj.eth.max"
+            :step="parameterForm.id === 4 || parameterForm.id === 2? feeObj.usdt.step : feeObj.eth.step"
           >
           </el-slider>
         </el-form-item>
         <el-form-item prop="fee" label="汇总保留" :label-width="parameterWidth" >
           <el-slider
             v-model="parameterForm.hold"
-            :min="parameterForm.id === 4 ? holdObj.usdt.min : holdObj.eth.min"
-            :max="parameterForm.id === 4 ? holdObj.usdt.max : holdObj.eth.max"
-            :step="parameterForm.id === 4 ? holdObj.usdt.step : holdObj.eth.step"
+            :min="parameterForm.id === 4 || parameterForm.id === 2? holdObj.usdt.min : holdObj.eth.min"
+            :max="parameterForm.id === 4 || parameterForm.id === 2? holdObj.usdt.max : holdObj.eth.max"
+            :step="parameterForm.id === 4 || parameterForm.id === 2? holdObj.usdt.step : holdObj.eth.step"
           >
           </el-slider>
         </el-form-item>
@@ -268,7 +268,7 @@
             step:0.1
           },
           eth: {
-            min: 1,
+            min: 0,
             max: 10000,
             step:1
           }
