@@ -27,7 +27,7 @@
         <el-button :loading="exportFlag" @click="exportTable">导出表格</el-button>
       </el-col>
       <el-col :span="6">
-        <el-input clearable placeholder="输入项目名称、手机号" v-model="searchText" class="input-with-select">
+        <el-input clearable placeholder="输入项目名称、邮箱" v-model="searchText" class="input-with-select">
           <el-button @click="searchHandler" slot="append" icon="el-icon-search">搜索</el-button>
         </el-input>
       </el-col>
@@ -50,8 +50,8 @@
           label="项目名称">
         </el-table-column>
         <el-table-column
-          prop="cellphone"
-          label="用户手机号">
+          prop="email"
+          label="用户邮箱">
         </el-table-column>
         <el-table-column
           label="成功数量/预约数量">
@@ -104,7 +104,7 @@
     },
     data() {
       return {
-        cellphone: '',
+        email: '',
         pageNum: 1,
         projectName: '',
         searchText: '',
@@ -133,14 +133,14 @@
     },
     methods: {
       orderData() {
-        this.$store.dispatch('getProjectOrderList', `?cellphone=${this.cellphone}&orderBy=created_at desc&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&pageNum=${this.pageNum}&pageSize=20&projectName=${this.projectName}&status=${this.orderStatus}`)
+        this.$store.dispatch('getProjectOrderList', `?email=${this.email}&orderBy=created_at desc&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&pageNum=${this.pageNum}&pageSize=20&projectName=${this.projectName}&status=${this.orderStatus}`)
       },
       searchHandler() {
         if(!(/^1[345789]\d{9}$/.test(this.searchText))){
-          this.cellphone = '';
+          this.email = '';
           this.projectName = this.searchText;
         } else {
-          this.cellphone = this.searchText;
+          this.email = this.searchText;
           this.projectName = '';
         }
         this.orderData()
@@ -148,7 +148,7 @@
       exportTable() {
         this.exportFlag = true;
         this.$store.dispatch('getSign').then((s) => {
-          window.open(`${window.urlData.url}/project/order/excel?cellphone=${this.cellphone}&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&pageNum=1&pageSize=${this.projectOrderList.total}&projectName=${this.projectName}&status=${this.orderStatus}&sign=${s}`)
+          window.open(`${window.urlData.url}/project/order/excel?email=${this.email}&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&pageNum=1&pageSize=${this.projectOrderList.total}&projectName=${this.projectName}&status=${this.orderStatus}&sign=${s}`)
           this.exportFlag = false
         }).catch(() => {
           this.exportFlag = false

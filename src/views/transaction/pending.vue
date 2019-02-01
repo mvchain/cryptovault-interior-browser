@@ -62,8 +62,8 @@
           label="订单号">
         </el-table-column>
         <el-table-column
-          prop="cellphone"
-          label="用户手机号">
+          prop="email"
+          label="用户邮箱">
         </el-table-column>
         <el-table-column
           label="交易类型">
@@ -177,7 +177,7 @@
         orderStatus: '',
         pairStatus: '',
         typeStatus: '',
-        cellphone: '',
+        email: '',
         rechargeTime: '',
         searchText: '',
         orderNumber: '',
@@ -188,10 +188,10 @@
     methods: {
       searchHandler() {
         if(!(/^1[345789]\d{9}$/.test(this.searchText))){
-          this.cellphone = '';
+          this.email = '';
           this.orderNumber = this.searchText;
         } else {
-          this.cellphone = this.searchText;
+          this.email = this.searchText;
           this.orderNumber = '';
         }
         this.txListData()
@@ -199,14 +199,14 @@
       exportTable() {
         this.exportFlag = true;
         this.$store.dispatch('getSign').then((s) => {
-          window.open(`${window.urlData.url}/transaction/excel?cellphone=${this.cellphone}&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&orderNumber=${this.orderNumber}&pageNum=1&pageSize=${this.txList.total}&pairId=${this.pairStatus}&status=${this.orderStatus}&transactionType=${this.typeStatus}&sign=${s}`)
+          window.open(`${window.urlData.url}/transaction/excel?email=${this.email}&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&orderNumber=${this.orderNumber}&pageNum=1&pageSize=${this.txList.total}&pairId=${this.pairStatus}&status=${this.orderStatus}&transactionType=${this.typeStatus}&sign=${s}`)
           this.exportFlag = false
         }).catch(() => {
           this.exportFlag = false
         })
       },
       txListData() {
-        this.$store.dispatch('getTxList', `?cellphone=${this.cellphone}&orderBy=created_at desc&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&orderNumber=${this.orderNumber}&pageNum=${this.pageNum}&pageSize=20&pairId=${this.pairStatus}&status=${this.orderStatus}&transactionType=${this.typeStatus}`)
+        this.$store.dispatch('getTxList', `?email=${this.email}&orderBy=created_at desc&createdStartAt=${this.rechargeTime ? this.rechargeTime[0] : 1}&createdStopAt=${this.rechargeTime ? this.rechargeTime[1] : new Date().getTime()}&orderNumber=${this.orderNumber}&pageNum=${this.pageNum}&pageSize=20&pairId=${this.pairStatus}&status=${this.orderStatus}&transactionType=${this.typeStatus}`)
       },
       handleCurrentChange(v) {
         this.pageNum = v;

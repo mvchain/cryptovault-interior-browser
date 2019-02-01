@@ -36,8 +36,8 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="cellphone"
-          label="用户手机号">
+          prop="email"
+          label="用户邮箱">
         </el-table-column>
         <el-table-column
           label="充值金额">
@@ -46,7 +46,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          prop="fromAddress"
+          prop="toAddress"
           label="目标地址">
         </el-table-column>
         <el-table-column

@@ -57,8 +57,8 @@
           label="单号">
         </el-table-column>
         <el-table-column
-          prop="cellphone"
-          label="用户手机号">
+          prop="email"
+          label="用户邮箱">
         </el-table-column>
         <el-table-column
           label="提币金额">

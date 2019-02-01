@@ -109,12 +109,12 @@
         <el-form-item label="每日提币上限" :label-width="parameterWidth" >
           <el-input  v-model="parameterForm.withdrawDay" ></el-input>
         </el-form-item>
-        <!--<el-form-item label="提币手续费" :label-width="parameterWidth" >-->
-          <!--<el-input  v-model="parameterForm.fee" ></el-input>-->
-        <!--</el-form-item>-->
+        <el-form-item label="用户提币手续费" :label-width="parameterWidth" >
+          <el-input  v-model="parameterForm.fee" ></el-input>
+        </el-form-item>
 
 
-        <el-form-item :label="parameterForm.id === 4 || parameterForm.id === 2? '交易手续费': 'GasPrice(Gwei)'" :label-width="parameterWidth" >
+        <el-form-item :label="'区块链手续费'" :label-width="parameterWidth" >
           <el-slider
             v-model="parameterForm.transaferFee"
             :min="parameterForm.id === 4 || parameterForm.id === 2 ? feeObj.usdt.min : feeObj.eth.min"
