@@ -1,4 +1,4 @@
-import { userList, userBalance, userLog, userStatus } from '@/api/user'
+import {userList, userBalance, userLog, userStatus, versionDetail, uploadApp} from '@/api/user'
 
 const user = {
   state: {
@@ -53,6 +53,25 @@ const user = {
     putUserStatus({commit, state}, payload) {
       return new Promise((resolve, reject) => {
         userStatus(payload).then((res) => {
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+
+    getVersionDetails({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        versionDetail().then((res) => {
+          resolve(res.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    putApp({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        uploadApp(payload).then((res) => {
           resolve()
         }).catch(error => {
           reject(error)

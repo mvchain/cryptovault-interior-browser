@@ -3,7 +3,6 @@
     <el-row>
       <el-col :span="18">
         <el-button style="margin-right:20px;" @click="multipleFun" v-if="permission.includes('1')">同意已勾选</el-button>
-        <el-button v-if="adminType === '0'" :loading="exportFlag" @click="exportsSign" style="margin-right:20px;">待签名文件导出</el-button>
         <el-button v-if="adminType === '0'"  @click="exportsHandler" style="margin-right:20px;">待签名文件导出</el-button>
         <import-component v-if="permission.includes('1')" :action="action" :labelTxt="'签名文件导入'"></import-component>
         <el-select @change="withdrawData" v-model="companyStatus" placeholder="请选择">
@@ -181,12 +180,12 @@
       exportsHandler() {
         this.$store.dispatch('getExportCount').then((res) => {
           const h = this.$createElement;
-          let html = [];
+          let html = [h('div', null, '因手续费浮动，建议中心钱包所有币种保留余额0.1以上')];
           res.forEach((item) => {
             let arr = [];
-            arr[1] = h('div', null, [h('span', null , '数量：'), h('span', null, item.num)]);
-            arr[0] = h('div', {class: 'export-item'}, [h('span', null , '币种：'), h('span', null, item.tokenName)]);
-            arr[2] = h('div', null, [h('span', null , '总计：'), h('span', null, item.total)]);
+            arr[2] = h('div', null, [h('span', null , '数量：'), h('span', null, item.num)]);
+            arr[1] = h('div', {class: 'export-item'}, [h('span', null , '币种：'), h('span', null, item.tokenName)]);
+            arr[3] = h('div', null, [h('span', null , '总计：'), h('span', null, item.total)]);
             html.push(arr)
           });
           this.$msgbox({

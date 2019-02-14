@@ -23,3 +23,15 @@ export function userStatus(data) {
     method: 'put'
   })
 }
+export function versionDetail() {
+  return request({
+    url: '/app',
+    method: 'get'
+  })
+}
+export function uploadApp(data) {
+  return request({
+    url: '/app' + '?httpUrl=' + data,
+    method: 'put'
+  })
+}

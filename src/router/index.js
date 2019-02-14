@@ -203,7 +203,21 @@ export const constantRouterMap = [
       }*/
     ]
   },
-
+  {
+    path: '/tokenManage',
+    component: Layout,
+    redirect: '/version/versionDetail',
+    name: 'version',
+    meta: { title: '版本信息', icon: 'record' },
+    children: [
+      {
+        path: 'versionDetail',
+        name: 'versionDetail',
+        component: _import('version/version'),
+        meta: { title: '版本信息', icon: 'record' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ];
 
