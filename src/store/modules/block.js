@@ -1,4 +1,4 @@
-import { blockTx, blockStatus, addrInfo, postBlockTx } from '@/api/block';
+import { blockTx, blockStatus, addrInfo, postBlockTx, blockExportCount } from '@/api/block';
 const block = {
   state: {
     blockTxList: {}
@@ -43,6 +43,15 @@ const block = {
       return new Promise((resolve, reject) => {
         postBlockTx(payload).then((res) => {
           resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    getExportCount({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        blockExportCount().then((res) => {
+          resolve(res.data)
         }).catch(error => {
           reject(error)
         })

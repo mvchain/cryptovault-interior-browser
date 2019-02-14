@@ -11,6 +11,12 @@ export function blockBalance(data) {
     method: 'get'
   })
 }
+export function blockExportCount() {
+  return request({
+    url: '/block/transaction/exportCount',
+    method: 'get'
+  })
+}
 
 export function blockStatus(data) {
   return request({
