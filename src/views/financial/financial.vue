@@ -166,7 +166,7 @@
     </el-dialog>
     <el-dialog :show-close="false" :visible="depthDialog" center >
       <el-input  type="number" max="20" min="0" placeholder="请输入内容" v-model.name="financialForm.depth">
-        <template slot="prepend">提升层级：</template>
+        <template slot="prepend">提成层级：</template>
       </el-input>
       <div slot="footer" class="dialog-footer">
         <el-button @click="depthDialog = false">取 消</el-button>
