@@ -3,7 +3,8 @@
     <el-row>
       <el-col :span="18">
         <el-button style="margin-right:20px;" @click="multipleFun" v-if="permission.includes('1')">同意已勾选</el-button>
-        <el-button v-if="adminType === '0'"  @click="exportsHandler" style="margin-right:20px;">待签名文件导出</el-button>
+        <!--<el-button v-if="adminType === '0'"  @click="exportsHandler" style="margin-right:20px;">待签名文件导出</el-button>-->
+        <el-button v-if="adminType === '0'" :loading="exportFlag" @click="exportsSign" style="margin-right:20px;">待签名文件导出</el-button>
         <import-component v-if="permission.includes('1')" :action="action" :labelTxt="'签名文件导入'"></import-component>
         <el-select @change="withdrawData" v-model="companyStatus" placeholder="请选择">
           <el-option
@@ -177,6 +178,15 @@
       this.withdrawData()
     },
     methods: {
+      exportsSign() {
+        this.exportFlag = true;
+        this.$store.dispatch('getSign').then((s) => {
+          window.open(`${window.urlData.url}/block/transaction/export?sign=${s}`)
+          this.exportFlag = false;
+        }).catch(() => {
+          this.exportFlag = false;
+        })
+      },
       exportsHandler() {
         this.$store.dispatch('getExportCount').then((res) => {
           const h = this.$createElement;
