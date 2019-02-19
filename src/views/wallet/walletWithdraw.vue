@@ -159,7 +159,7 @@
             this.subFlag = true;
             let cy = Object.assign({}, this.withdrawForm);
             cy.password = md5(md5(cy.password) + this.manage.username);
-            this.$store.dispatch('postTx', this.withdrawForm).then(() => {
+            this.$store.dispatch('postTx', cy).then(() => {
               this.subFlag = false;
               this.withdrawFlag = false;
               this.$refs[form].resetFields();
