@@ -83,6 +83,7 @@
 <script>
   import importComponents from '../../components/import-component';
   import {mapGetters} from 'vuex';
+  import md5 from 'blueimp-md5'
   export default {
     name: "wallet-withdraw",
     computed: {
@@ -92,6 +93,9 @@
         adminType: 'adminType',
         tokenList: 'tokenList'
       }),
+    },
+    props: {
+      manage: Object
     },
     components: {
       'import-component': importComponents
@@ -153,6 +157,8 @@
         this.$refs[form].validate((valid) => {
           if (valid) {
             this.subFlag = true;
+            let cy = Object.assign({}, this.withdrawForm);
+            cy.password = md5(md5(cy.password) + this.manage.username);
             this.$store.dispatch('postTx', this.withdrawForm).then(() => {
               this.subFlag = false;
               this.withdrawFlag = false;
