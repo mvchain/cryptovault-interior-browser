@@ -1,58 +1,6 @@
 <template>
   <div class="browser">
-    <div style="margin-bottom:20px;">
-      <el-button @click="dialogFormVisible=true">新建信息</el-button>
-    </div>
-    <el-table
-      :data="browserList.list"
-      border
-      style="width: 100%">
-      <el-table-column
-        prop="maxDifficult"
-        label="最大难度">
-      </el-table-column>
-
-      <el-table-column
-        prop="minDifficult"
-        label="最小难度">
-      </el-table-column>
-      <el-table-column
-        prop="maxTransaction"
-        label="最大交易笔数">
-      </el-table-column>
-      <el-table-column
-        prop="minTransaction"
-        label="最小交易笔数">
-      </el-table-column>
-      <el-table-column
-        prop="startBlock"
-        label="有效开始区块">
-      </el-table-column>
-      <el-table-column
-        prop="total"
-        label="发行总量">
-      </el-table-column>
-      <el-table-column
-        prop="version"
-        label="当前版本">
-      </el-table-column>
-      <el-table-column
-        width="300"
-        label="操作">
-        <template slot-scope="scope">
-          <el-button  size="small" @click="editShop(scope.row)">编辑</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-    <div style="margin-top:30px; text-align:center;">
-      <el-pagination
-        @current-change="handleCurrentChange"
-        :page-size="20"
-        layout="prev, pager, next"
-        :total="browserList.total">
-      </el-pagination>
-    </div>
-    <el-dialog @closed="dialogClose" width="500px" :title="dialogTitle?'新建渠道商':'编辑渠道商'" :visible.sync="dialogFormVisible" center>
+    <div style="width:800px">
       <el-form :rules="browserRule" :model="browserForm" ref="browserForm">
         <el-form-item prop="maxDifficult" label="最大难度：" :label-width="formLabelWidth" >
           <el-input v-model="browserForm.maxDifficult"></el-input>
@@ -75,12 +23,11 @@
         <el-form-item prop="version" label="当前版本：" :label-width="formLabelWidth" >
           <el-input v-model="browserForm.version"></el-input>
         </el-form-item>
+        <el-form-item >
+          <el-button :loading="subFlag" type="primary" @click="addDetail('browserForm')">确 定</el-button>
+        </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button :loading="subFlag" type="primary" @click="addDetail('browserForm')">确 定</el-button>
-      </div>
-    </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -90,27 +37,14 @@
     name: 'browser',
     computed: {
       ...mapGetters({
-        browserList: 'browserList'
+        browserForm: 'browserList'
       })
     },
     data() {
       return {
-        pageNum: 1,
-        dialogFormVisible: false,
-        copyForm: {},
         subFlag: false,
-        formLabelWidth: '120px',
-        dialogTitle: true,
-        browserForm: {
-          maxDifficult: '',
-          maxTransaction: '',
-          minDifficult: '',
-          id: '',
-          minTransaction: '',
-          startBlock: '',
-          total: '',
-          version: ''
-        },
+        formLabelWidth: '180px',
+
         browserRule: {
           maxDifficult: [
             { required: true, message: '请输入最大难度', trigger: 'blur' }
@@ -138,7 +72,6 @@
     },
     mounted() {
       this.getList()
-      this.copyForm = Object.assign({}, this.browserForm);
     },
     methods: {
       addDetail(form) {
@@ -147,10 +80,7 @@
           if (valid) {
             this.$store.dispatch('postBrowserList', this.browserForm).then(() => {
               this.subFlag = false;
-              [this.dialogFormVisible, this.dialogTitle] = [false, true];
-              this.$refs[form].resetFields();
               this.$message.success('提交成功');
-              this.getList()
             }).catch();
           } else {
             this.subFlag = false;
@@ -161,20 +91,8 @@
           }
         })
       },
-      editShop(row) {
-        this.browserForm = Object.assign({}, row);
-        [this.dialogFormVisible, this.dialogTitle] = [true, false];
-      },
       getList() {
-        this.$store.dispatch('getBrowserList', `?orderBy=created_at desc&pageNum=${this.pageNum}&pageSize=20`);
-      },
-      handleCurrentChange(v) {
-        this.pageNum = v
-        this.getList()
-      },
-      dialogClose() {
-        this.browserForm = Object.assign({}, this.copyForm)
-        this.dialogTitle = true;
+        this.$store.dispatch('getBrowserList');
       }
     }
   }

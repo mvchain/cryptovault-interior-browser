@@ -14,6 +14,7 @@ const getters = {
   userLogList: state => state.user.userLogList,
 
   blockTxList: state => state.block.blockTxList,
+  browserList: state => state.block.browserList,
 
   projectList: state => state.project.projectList,
   projectOrderList: state => state.project.projectOrderList,

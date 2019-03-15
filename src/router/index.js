@@ -178,6 +178,21 @@ export const constantRouterMap = [
     ]
   },
   {
+    path: '/browser',
+    component: Layout,
+    redirect: '/browser/browserManage',
+    name: 'browser',
+    meta: { title: '区块浏览器', icon: 'record' },
+    children: [
+      {
+        path: 'browserManage',
+        name: 'browserManage',
+        component: _import('browser/browser'),
+        meta: { title: '区块浏览器', icon: 'record' }
+      }
+    ]
+  },
+  {
     path: '/wallet',
     component: Layout,
     redirect: '/wallet/walletManage',

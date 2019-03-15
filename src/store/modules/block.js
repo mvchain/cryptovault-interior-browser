@@ -1,12 +1,16 @@
-import { blockTx, blockStatus, addrInfo, postBlockTx, blockExportCount } from '@/api/block';
+import { blockTx, blockStatus, addrInfo, postBlockTx, blockExportCount, getBrowser, postBrowser } from '@/api/block';
 const block = {
   state: {
-    blockTxList: {}
+    blockTxList: {},
+    browserList: {}
   },
 
   mutations: {
     SET_BLOCKTX_LIST: (state, payload) => {
       state.blockTxList = payload
+    },
+    SET_BROWSER_LIST: (state, payload) => {
+      state.browserList = payload
     }
   },
 
@@ -52,6 +56,25 @@ const block = {
       return new Promise((resolve, reject) => {
         blockExportCount().then((res) => {
           resolve(res.data)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    getBrowserList({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        getBrowser(payload).then((res) => {
+          commit('SET_BROWSER_LIST', res.data);
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    postBrowserList({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        postBrowser(payload).then((res) => {
+          resolve()
         }).catch(error => {
           reject(error)
         })

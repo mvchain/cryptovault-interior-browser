@@ -44,3 +44,16 @@ export function postBlockTx(data) {
     data
   })
 }
+export function getBrowser() {
+  return request({
+    url: '/explorer',
+    method: 'get'
+  })
+}
+export function postBrowser(data) {
+  return request({
+    url: '/explorer',
+    method: 'post',
+    data
+  })
+}
