@@ -48,11 +48,12 @@
         </template>
       </el-table-column>
       <el-table-column
-        width="300"
+        width="350"
         label="操作">
         <template slot-scope="scope">
           <el-button @click="$router.push({path: 'assets', query: {id: scope.row.id, nickname: scope.row.nickname, cellphone: scope.row.cellphone}})" size="small">资产列表</el-button>
           <el-button @click="$router.push({path: 'operating', query: {id: scope.row.id, nickname: scope.row.nickname, cellphone: scope.row.cellphone}})" size="small">操作记录</el-button>
+          <el-button @click="editGoogle(scope.row)" size="small">编辑</el-button>
           <el-button @click="enableDisable({id: scope.row.id, status: scope.row.status})" v-if="permission.includes('2')" size="small">{{scope.row.status === 1 ? '禁用' : '启用'}}</el-button>
         </template>
       </el-table-column>
@@ -65,6 +66,18 @@
         :total="userList.total">
       </el-pagination>
     </div>
+    <el-dialog
+      title="编辑"
+      :visible.sync="editdialog"
+      width="30%"
+      >
+      <el-button @click="unGoogleCode" :disabled="userInfo.googleCheck === 0">解绑谷歌验证器</el-button>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="editdialog = false">取 消</el-button>
+    <!--<el-button type="primary" @click="editdialog = false">确 定</el-button>-->
+  </span>
+    </el-dialog>
+
   </div>
 </template>
 
@@ -79,7 +92,9 @@
       return {
         pageNum: 1,
         userStatus: '',
+        userInfo: {},
         searchText: '',
+        editdialog: false,
         userTypeList: [
           {
             id: '',
@@ -107,6 +122,25 @@
       this.userListData()
     },
     methods: {
+      unGoogleCode() {
+        this.$confirm('是否确认解除绑定?', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          this.$store.dispatch('putGoogleCode', {id: this.userInfo.id, status: 0}).then(() => {
+            this.$message({
+              type: 'success',
+              message: '解除成功!'
+            });
+            this.userInfo.googleCheck = 0;
+          })
+
+        }).catch(() => {})
+      },
+      editGoogle(r) {
+        this.editdialog = true;
+        Object.assign(this.userInfo, r)
+      },
       handleCurrentChange(v) {
         this.pageNum = v;
         this.userListData()

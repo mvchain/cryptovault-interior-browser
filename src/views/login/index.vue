@@ -47,9 +47,9 @@
     data() {
       return {
         loginForm: {
-          username: 'admin',
-          password: 'admin',
-          valiCode: '123'
+          username: '',
+          password: '',
+          valiCode: ''
         },
         verificationImg: '',
         loginRules: {

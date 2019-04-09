@@ -35,3 +35,9 @@ export function uploadApp(data) {
     method: 'put'
   })
 }
+export function googlecode(opt) {
+  return request({
+    url: `/user/${opt.id}/google?status=${opt.status}`,
+    method: 'put'
+  })
+}

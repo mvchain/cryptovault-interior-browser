@@ -97,7 +97,7 @@ export const constantRouterMap = [
       },
     ]
   },
-  {
+  /*{
     path: '/crowdfunding',
     component: Layout,
     redirect: '/crowdfunding/project',
@@ -117,7 +117,7 @@ export const constantRouterMap = [
         meta: { title: '预约订单', icon: 'wallet' }
       }
     ]
-  },
+  },*/
   {
     path: '/tokenManage',
     component: Layout,

@@ -68,9 +68,9 @@
         <el-form-item v-if="adminType === '0'" class="admin-form-item" label="币种控制："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[2].status"></el-switch>
         </el-form-item>
-        <el-form-item v-if="adminType === '0'" class="admin-form-item" label="众筹控制："  :label-width="formLabelWidth">
+      <!--  <el-form-item v-if="adminType === '0'" class="admin-form-item" label="众筹控制："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[3].status"></el-switch>
-        </el-form-item>
+        </el-form-item>-->
         <el-form-item v-if="adminType === '0'" class="admin-form-item" label="交易控制："  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="manageForm.permissionList[4].status"></el-switch>
         </el-form-item>

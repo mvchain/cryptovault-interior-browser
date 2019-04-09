@@ -1,4 +1,4 @@
-import {userList, userBalance, userLog, userStatus, versionDetail, uploadApp} from '@/api/user'
+import {userList, userBalance, userLog, userStatus, versionDetail, uploadApp, googlecode} from '@/api/user'
 
 const user = {
   state: {
@@ -72,6 +72,15 @@ const user = {
     putApp({commit, state}, payload) {
       return new Promise((resolve, reject) => {
         uploadApp(payload).then((res) => {
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    putGoogleCode({commit, state}, payload) {
+      return new Promise((resolve, reject) => {
+        googlecode(payload).then((res) => {
           resolve()
         }).catch(error => {
           reject(error)

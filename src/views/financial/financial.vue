@@ -141,6 +141,14 @@
             placeholder="选择日期">
           </el-date-picker>
         </el-form-item>
+        <el-form-item label="显示年化收益率" :label-width="formLabelWidth" >
+          <el-input v-model="financialForm.showIncomeMin" class="financial-input"></el-input>
+          ——
+          <el-input v-model="financialForm.showIncomeMax" class="financial-input"></el-input>
+        </el-form-item>
+        <el-form-item class="financial-form-item" label="收益比例" :label-width="formLabelWidth" >
+          <el-input v-model="financialForm.nextIncome"></el-input>
+        </el-form-item>
         <el-form-item  class="financial-form-item" label="是否前端展示"  :label-width="formLabelWidth">
           <el-switch :active-value="1" :inactive-value="0" v-model="financialForm.visible"></el-switch>
         </el-form-item>
@@ -266,6 +274,9 @@
           incomeMax: '',
           incomeMin: '',
           limitValue: '',
+          showIncomeMin: '',
+          showIncomeMax: '',
+          nextIncome: '',
           minValue: '',
           ratio: '',
           startAt: new Date().getTime(),
@@ -276,7 +287,7 @@
           userLimit: '',
           visible: 0
         },
-        formLabelWidth: '120px',
+        formLabelWidth: '150px',
         subFlag: false,
         pageNum: 1,
         copyFinancialForm: {}
