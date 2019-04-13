@@ -55,7 +55,7 @@
       <el-table-column
         label="开通交易对">
         <template slot-scope="scope">
-          {{scope.row.pairInfo === 0 ? '无':scope.row.pairInfo === 1 ? 'BZTB交易' : scope.row.pairInfo === 2 ? '余额交易' : 'BZTB交易、余额交易'}}
+          {{scope.row.pairInfo === 0 ? '无':scope.row.pairInfo === 1 ? 'MVC交易' : scope.row.pairInfo === 2 ? '余额交易' : 'MVC交易、余额交易'}}
         </template>
       </el-table-column>
       <el-table-column
@@ -142,7 +142,7 @@
         <el-form-item  class="parameter-label-item" label="充币" :label-width="parameterWidth" >
           <el-switch  :active-value="1" :inactive-value="0" v-model="parameterForm.recharge" ></el-switch>
         </el-form-item>
-        <el-form-item  class="parameter-label-item"  label="BZTB交易区" :label-width="parameterWidth" >
+        <el-form-item  class="parameter-label-item"  label="MVC交易区" :label-width="parameterWidth" >
           <el-switch :active-value="1" :inactive-value="0" v-model="parameterForm.vrt" ></el-switch>
         </el-form-item>
         <el-form-item class="parameter-label-item" label="前端展示" :label-width="parameterWidth" >

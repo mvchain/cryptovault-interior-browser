@@ -46,8 +46,14 @@
           </template>
         </el-table-column>
         <el-table-column
+          label="额度减少比例">
+          <template slot-scope="scope">
+            {{scope.row.addSold}}%
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="times"
-          label="签到天数">
+          label="次数/天数">
         </el-table-column>
         <el-table-column
           prop="limitValue"
@@ -64,6 +70,7 @@
           </template>
         </el-table-column>
         <el-table-column
+          width="150"
           label="操作">
           <template slot-scope="scope">
             <el-button v-if="permission.includes('6')" @click="editManage(scope.row.id)" size="small">编辑</el-button>
@@ -82,10 +89,20 @@
     </div>
     <el-dialog @closed="dialogClose" width="700px" :title="dialogTitle?'新建项目':'编辑项目'" :visible.sync="dialogFormVisible" center>
       <el-form :rules="financialRule" :model="financialForm" ref="financialForm">
+        <el-form-item prop="baseTokenId" class="financial-form-item" label="项目类型" :label-width="formLabelWidth" >
+          <el-select v-model="financialForm.needSign" placeholder="请选择">
+            <el-option
+              v-for="item in checkInType"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
         <el-form-item prop="name" class="financial-form-item" label="项目名称" :label-width="formLabelWidth" >
           <el-input v-model="financialForm.name"></el-input>
         </el-form-item>
-        <el-form-item prop="times" class="financial-form-item" label="需签到天数" :label-width="formLabelWidth" >
+        <el-form-item prop="times" class="financial-form-item" label="天数/次数" :label-width="formLabelWidth" >
           <el-input v-model="financialForm.times"></el-input>
         </el-form-item>
         <el-form-item prop="baseTokenId" class="financial-form-item" label="理财币种" :label-width="formLabelWidth" >
@@ -125,10 +142,10 @@
           <el-button size="small" @click="ruleDialog = true">设置</el-button><i :class="ruleFlag ? 'el-icon-success financial-icon financial-icon-succ':'el-icon-error financial-icon financial-icon-err'"></i>
         </el-form-item>
 
-        <el-form-item prop="minValue" class="financial-form-item" label="起投金额"  :label-width="formLabelWidth">
+        <el-form-item prop="minValue" class="financial-form-inline" label="起投金额"  :label-width="formLabelWidth">
           <el-input v-model="financialForm.minValue"></el-input>
         </el-form-item>
-        <el-form-item prop="income" label="年化收益率" :label-width="formLabelWidth" >
+        <el-form-item  label="年化收益率" :label-width="formLabelWidth" >
           <el-input v-model="financialForm.incomeMin" class="financial-input"></el-input>
           ——
           <el-input v-model="financialForm.incomeMax" class="financial-input"></el-input>
@@ -146,7 +163,10 @@
           ——
           <el-input v-model="financialForm.showIncomeMax" class="financial-input"></el-input>
         </el-form-item>
-        <el-form-item class="financial-form-item" label="收益比例" :label-width="formLabelWidth" >
+        <el-form-item class="financial-form-item" label="额度减少比例" :label-width="formLabelWidth" >
+          <el-input v-model="financialForm.addSold"></el-input>
+        </el-form-item>
+        <el-form-item class="financial-form-item" label="单次收益" :label-width="formLabelWidth" >
           <el-input v-model="financialForm.nextIncome"></el-input>
         </el-form-item>
         <el-form-item  class="financial-form-item" label="是否前端展示"  :label-width="formLabelWidth">
@@ -161,10 +181,26 @@
     <el-dialog :show-close="false" :visible="ruleDialog" center >
       <el-form :model="financialForm.content">
         <el-form-item label="产品介绍" :label-width="formLabelWidth">
-          <el-input :autosize="{ minRows: 4}" type="textarea" v-model="financialForm.content.content" autocomplete="off"></el-input>
-        </el-form-item>
-        <el-form-item label="参与规则" :label-width="formLabelWidth">
-          <el-input :autosize="{ minRows: 4}" type="textarea" v-model="financialForm.content.rule"></el-input>
+          <div class="edit_container">
+            <el-upload
+              class="avatar-uploader"
+              :action="imgBase"
+              :data="imgObj"
+              :show-file-list="false"
+              :on-success="uploadSuccess"
+              :on-error="uploadError"
+              :before-upload="beforeUpload">
+            </el-upload>
+            <el-row v-loading="quillUpdateImg">
+              <quill-editor
+                v-model="financialForm.content.content"
+                ref="myQuillEditor"
+                :options="editorOption"
+
+              >
+              </quill-editor>
+            </el-row>
+          </div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -202,17 +238,72 @@
 
 <script>
   import {mapGetters} from 'vuex'
+  import { quillEditor } from "vue-quill-editor"; //调用编辑器
+  import 'quill/dist/quill.core.css';
+  import 'quill/dist/quill.snow.css';
+  import 'quill/dist/quill.bubble.css';
+  //window.urlData.url + '/block/sign/import'
   export default {
     name: 'financial',
+    components: {
+      quillEditor,
+    },
     data() {
       const validatorIncome = (rule, value, callback) => {
         if (!this.financialForm.incomeMax || !this.financialForm.incomeMin) {
-          callback(new Error('请输入年华收益率'));
+          callback(new Error('请输入年化收益率'));
         } else {
           callback();
         }
       };
+      let that = this;
       return {
+        quillUpdateImg: false, // 根据图片上传状态来确定是否显示loading动画，刚开始是false,不显示
+        serverUrl: window.urlData.ossObj.host,  // 这里写你要上传的图片服务器地址
+        detailContent: '', // 富文本内容
+        editorOption: {
+          placeholder: '请输入介绍内容',
+          theme: 'snow',  // or 'bubble'
+          type: 'file',
+          modules: {
+            toolbar: {
+              container: window.urlData.toolbarOptions,  // 工具栏
+              handlers: {
+                'image': function (value) {
+                  if (value) {
+                    // 触发input框选择图片文件
+                    document.querySelector('.avatar-uploader input').click()
+                    that.$store.dispatch('getOssObj').then((res) => {
+                      that.ossObj = res;
+                      that.imgObj.policy = res.policy;
+                      that.imgObj.signature = res.signature
+                    }).catch((err) => {
+                      that.$message.error(err)
+                    })
+                  } else {
+                    this.quill.format('image', false);
+                  }
+                }
+              }
+            }
+          }
+        },  // 富文本编辑器配置
+        imgObj: {
+          name: '',
+          key: '',
+          policy: '',
+          OSSAccessKeyId: window.urlData.ossObj.accessid,
+          success_action_status: '200',
+          signature: ''
+        },
+        imgBase: window.urlData.ossObj.host,
+        limit: 1,
+
+
+
+
+
+
         dialogFormVisible: false,
         searchText: '',
         dialogTitle: true,
@@ -249,7 +340,7 @@
             { required: true, message: '请选择结束时间', trigger: 'blur' }
           ],
           times: [
-            { required: true, message: '请输入签到天数', trigger: 'blur' }
+            { required: true, message: '请输入次数/天数', trigger: 'blur' }
           ],
           tokenId: [
             { required: true, message: '请选择收益币种', trigger: 'blur' }
@@ -263,13 +354,14 @@
         },
         financialForm: {
           name: '',
+          needSign: 1,
           baseTokenId: '',
           baseTokenName: '',
           content: {
             content: '',
-            rule: ''
           },
           depth: '',
+          addSold: '',
           details: [],
           incomeMax: '',
           incomeMin: '',
@@ -290,7 +382,17 @@
         formLabelWidth: '150px',
         subFlag: false,
         pageNum: 1,
-        copyFinancialForm: {}
+        copyFinancialForm: {},
+        checkInType: [
+          {
+            id: 1,
+            name: '签到'
+          },
+          {
+            id: 0,
+            name: '周期'
+          }
+        ]
       }
     },
     computed: {
@@ -298,6 +400,9 @@
         financialList: 'financialList',
         tokenList: 'tokenList',
         permission: 'permission',
+        editor() {
+          return this.$refs.myQuillEditor.quill;
+        }
       })
     },
     watch: {
@@ -331,6 +436,73 @@
       this.copyFinancialForm = Object.assign({}, this.financialForm);
     },
     methods: {
+
+      beforeUpload(res, file) {
+        let isJPG = false
+        isJPG = res.type === 'image/jpeg' || res.type === 'image/png' || res.type === 'image/jpg'
+        const isLt2M = res.size / 1024 / 1024 < this.limit
+        this.imgObj.key = this.calculate_object_name(res.name)
+        if (!isJPG) {
+          this.$message.error(`只支持${this.payload}格式!`)
+        }
+        if (!isLt2M) {
+          this.$message.error(`上传文件大小不能超过 ${this.limit}MB!`)
+        }
+        this.quillUpdateImg = true
+        return isJPG && isLt2M
+
+      },
+      // 上传图片成功
+      uploadSuccess(res, file) {
+        let quill = this.$refs.myQuillEditor.quill
+        let length = quill.getSelection().index;
+        let  imageUrl = this.imgBase + '/' + this.imgObj.key
+        quill.insertEmbed(length, 'image', imageUrl)
+        quill.setSelection(length + 1)
+        this.quillUpdateImg = false
+      },
+      // 上传图片失败
+      uploadError(res, file) {
+        this.quillUpdateImg = false
+        this.$message.error('图片插入失败')
+      },
+      random_string(len) {
+        len = len || 32
+        const chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'
+        const maxPos = chars.length
+        let pwd = ''
+        for (let i = 0; i < len; i++) {
+          pwd += chars.charAt(Math.floor(Math.random() * maxPos))
+        }
+        return pwd
+      },
+
+      get_suffix(filename) {
+        const pos = filename.lastIndexOf('.')
+        let suffix = ''
+        if (pos !== -1) {
+          suffix = filename.substring(pos)
+        }
+        return suffix
+      },
+      calculate_object_name(filename) {
+        const nowStr =  new Date().getTime()
+        const suffix = this.get_suffix(filename)
+        return this.ossObj.dir + '/' + nowStr + this.random_string(10) + suffix
+      },
+
+
+
+
+
+
+
+
+
+
+      // 上传图片成功
+
+
       tokenFun(v, l) {
         let obj = {};
         obj = this.tokenList.find((item) => {
@@ -380,7 +552,8 @@
         })
       },
       subRuleDialog() {
-        if (this.financialForm.content.content.replace(/\s/ig,'') && this.financialForm.content.rule.replace(/\s/ig,'')) {
+        // this.financialForm.content.content.replace(/\s/ig,'') && this.financialForm.content.rule.replace(/\s/ig,'')
+        if (this.financialForm.content.content) {
           this.ruleFlag = true;
         } else {
           this.ruleFlag = false;

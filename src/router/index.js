@@ -233,6 +233,21 @@ export const constantRouterMap = [
       }
     ]
   },*/
+  {
+    path: '/announcement',
+    component: Layout,
+    redirect: '/announcement/manage',
+    name: 'version',
+    meta: { title: '公告', icon: 'record' },
+    children: [
+      {
+        path: 'announmanage',
+        name: 'announmanage',
+        component: _import('announcement/announcement'),
+        meta: { title: '公告', icon: 'record' }
+      }
+    ]
+  },
   { path: '*', redirect: '/404', hidden: true }
 ];
 

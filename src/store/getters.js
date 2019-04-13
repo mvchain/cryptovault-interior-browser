@@ -26,6 +26,7 @@ const getters = {
   overList: state => state.transaction.overList,
 
   financialList: state => state.financal.financialList,
-  financialOrder: state => state.financal.financialOrder
+  financialOrder: state => state.financal.financialOrder,
+  bannerList: state => state.banner.bannerList
 }
 export default getters

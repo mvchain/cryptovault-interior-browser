@@ -9,10 +9,10 @@ import user from './modules/user'
 import token from './modules/token'
 import transaction from './modules/transaction'
 import financal from './modules/financal'
+import banner from './modules/banner'
 import getters from './getters'
 
 Vue.use(Vuex)
-
 const store = new Vuex.Store({
   modules: {
     app,
@@ -23,6 +23,7 @@ const store = new Vuex.Store({
     block,
     token,
     transaction,
+    banner,
     financal
   },
   getters
